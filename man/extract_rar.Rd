@@ -8,6 +8,8 @@ extract_rar(rar_file, dest_dir = NULL)
 }
 \arguments{
 \item{rar_file}{a file path to a 'filename.rar'}
+
+\item{dest_dir}{path to extract shape files}
 }
 \value{
 character vector with shape files path
