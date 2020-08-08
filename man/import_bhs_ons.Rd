@@ -29,18 +29,17 @@ the files in 'BaciasHidrograficasONS_SEPARADO.rar'.
 }
 \examples{
 \dontrun{
- if(interactive()){
-  ## data path
-  dp <- "~/Dropbox/datasets/GIS/BaciaHidrograficaoONS_EnviadosProfAssis/"
-  # dir_ls(dp)
-  ## shape bhs juntas
-  bhons <- fs::dir_ls(dp, regexp = "JUNTOS*.rar$", type = "file")
-  shapes <- extract_rar(bhons)
-  #shapes
-  shape_file <- shapes[grep("Bacias", path_file(shapes))]
-  pols_uhes <- import_bhs_ons(shape_file)
-  glimpse(pols_uhes)
- }
+if (interactive()) {
+  bhs_rar_file <- system.file(
+    "extdata",
+    "BaciasHidrograficasONS_JUNTOS.rar",
+    package = "HEgis"
+  )
+  shapes <- extract_rar(bhs_rar_file)
+  shapes
+  bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes))]
+  pols_bhs <- import_bhs_ons(bhs_shape_file, verbose = TRUE)
+}
 }
 }
 \author{
