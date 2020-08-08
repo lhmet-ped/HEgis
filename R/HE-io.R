@@ -6,7 +6,7 @@
 #' @importFrom dplyr %>%
 #' @importFrom checkmate assert_file_exists
 #' @importFrom sf st_read
-#' @importFrom dplyr mutate where starts_with glimpse
+#' @importFrom dplyr mutate starts_with glimpse
 #' @importFrom tidyselect vars_select_helpers
 #'
 #' @details This function was made to import a specific
