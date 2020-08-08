@@ -5,6 +5,7 @@
 #' This function extract files from a rar file
 #'
 #' @param rar_file a file path to a 'filename.rar'
+#' @param dest_dir path to extract shape files
 #' @return character vector with shape files path
 #' @details This function has the side effect of generating a
 #' directory with the uncompressed files in the HEgis
@@ -123,14 +124,19 @@ import_bhs_ons <- function(shape_file, verbose = FALSE) {
   pols <- dplyr::mutate(
     pols,
     dplyr::across(
-      tidyselect:::where(is.character),
+      tidyselect::vars_select_helpers$where(is.character),
       readr::parse_guess
     )
   ) %>% # glimpse()
     dplyr::mutate(
-      .,
-      dplyr::across(tidyselect:::where(is.numeric), .fix_nas),
-      dplyr::across(dplyr::starts_with("co"), as.character),
+      dplyr::across(
+        tidyselect::vars_select_helpers$where(is.numeric),
+        .fix_nas
+      ),
+      dplyr::across(
+        dplyr::starts_with("co"),
+        as.character
+      ),
       dplyr::across(
         tidyselect::vars_select_helpers$where(is.character), .fix_nas_char
       )
