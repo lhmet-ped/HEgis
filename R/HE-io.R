@@ -6,7 +6,6 @@
 #'
 #' @param rar_file a file path to a 'filename.rar'
 #' @param dest_dir path to extract shape files
-#' is both readable and writable. Default is FALSE.
 #' @return character vector with shape files path
 #' @details This function has the side effect of generating a
 #' directory with the uncompressed files in the HEgis
