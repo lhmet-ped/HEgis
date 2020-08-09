@@ -9,7 +9,8 @@ extract_rar(rar_file, dest_dir = NULL)
 \arguments{
 \item{rar_file}{a file path to a 'filename.rar'}
 
-\item{dest_dir}{path to extract shape files}
+\item{dest_dir}{path to extract shape files
+is both readable and writable. Default is FALSE.}
 }
 \value{
 character vector with shape files path
