@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/HEgis)](https://CRAN.R-project.org/package=HEgis)
 <!-- badges: end -->
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project.
