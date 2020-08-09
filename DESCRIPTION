@@ -1,5 +1,5 @@
 Package: HEgis
-Title: What the Package Does (One Line, Title Case)
+Title: Functions To Import Gis Data Needed For The Hydroengie Project
 Version: 0.1.0
 Authors@R: 
     person(given = "Jônatan",
@@ -24,5 +24,10 @@ Imports:
     fs,
     assertive,
     assertthat,
-    tibble
+    tibble,
+    checkmate,
+    readr,
+    stringr
 Language: en-US
+Depends: 
+    R (>= 4.0)

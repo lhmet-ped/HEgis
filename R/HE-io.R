@@ -6,6 +6,7 @@
 #'
 #' @param rar_file a file path to a 'filename.rar'
 #' @param dest_dir path to extract shape files
+#' is both readable and writable. Default is FALSE.
 #' @return character vector with shape files path
 #' @details This function has the side effect of generating a
 #' directory with the uncompressed files in the HEgis
@@ -47,7 +48,8 @@ extract_rar <- function(
 
   # Check if data path can be used safely to unrar the file and write to it.
   if (checkmate::test_path_for_output(dir_extract_rar)) {
-    fs::dir_create(dir_extract_rar)
+
+    if(!fs::dir_exists(dir_extract_rar)) fs::dir_create(dir_extract_rar)
     # checkmate::test_os("linux")
 
     # linux-only
