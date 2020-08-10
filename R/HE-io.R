@@ -1,6 +1,6 @@
 
 
-#' Extract files from a rar file (linux)
+#' Extract files from a rar file (only works on linux)
 #'
 #' This function extract files from a rar file
 #'
@@ -29,39 +29,68 @@
 
 extract_rar <- function(
                         rar_file,
-                        dest_dir = NULL) {
+                        dest_dir = NULL,
+                        overwrite = FALSE,
+                        quiet = TRUE) {
 
-  # check file
+  rar_file <- fs::path_real(rar_file)
 
+  # input checks
   checkmate::assert_file_exists(rar_file)
   assertthat::assert_that(
     assertthat::has_extension(rar_file, "rar")
   )
 
-  # dir to extract shape files (based on file name)
-  dir_extract_rar <- ifelse(
-    is.null(dest_dir),
-    fs::path_ext_remove(rar_file),
-    dest_dir
-  )
+  # create dir to extract at base dir from rar file
+  dir_extract_rar <- fs::path_ext_remove(rar_file)
 
-  # Check if data path can be used safely to unrar the file and write to it.
-  if (checkmate::test_path_for_output(dir_extract_rar)) {
+  if (!is.null(dest_dir)) {
+    dest_dir <- fs::path_real(dest_dir)
+    checkmate::assert_directory_exists(dest_dir)
+    dir_extract_rar <- fs::path(dest_dir, basename(dir_extract_rar))
+    #checkmate::assert_path_for_output(dir_extract_rar)
+  }
 
-    if(!fs::dir_exists(dir_extract_rar)) fs::dir_create(dir_extract_rar)
-    # checkmate::test_os("linux")
+  # build appropriate call to unrar
+  if (!fs::dir_exists(dir_extract_rar)) {
 
-    # linux-only
-    checkmate::assert_os("linux")
-    system(paste("unrar e", rar_file, dir_extract_rar), intern = FALSE)
+    fs::dir_create(dir_extract_rar)
+    checkmate::assert_path_for_output(dir_extract_rar, overwrite = TRUE)
+    cmd <- paste0("unrar e ", rar_file, " ", dir_extract_rar)
 
-    # list shape files
+  } else {
+    # check if exists files in pre-existent dir
+    if(length(dir(dir_extract_rar, all.files = TRUE)) > 0 && overwrite){
+      cmd <- paste0("unrar e -o+ ", rar_file, " ", dir_extract_rar)
+    } else {
+      stop("There are files in the folder. Use overwrite = TRUE to
+           overwrite pre-existent files.")
+    }
+  }
+
+  # decompress
+  if(checkmate::test_os("linux")) {
+    # capture.output(out_call_unrar <- system(cmd,intern = TRUE),file = "NUL")
+    if(quiet){
+      out_call_unrar <- system(cmd, intern = FALSE, ignore.stdout = quiet)
+
+    } #else {
+      #out_call_unrar <- system(cmd, intern = FALSE)
+    #}
+
+    if(out_call_unrar != 0) {
+      # print output console
+      system(cmd, intern = TRUE)
+      stop("\n unrar process returned error \n")
+    #sudo apt install unrar
+    }
+    # list of shape files
     shapes <- fs::dir_ls(dir_extract_rar, type = "file", glob = "*.shp")
     return(shapes)
   }
 
-  shapes <- fs::dir_ls(dir_extract_rar, type = "file", glob = "*.shp")
-  shapes
+  message("This function works only on linux systems.")
+  return(NULL)
 }
 
 
