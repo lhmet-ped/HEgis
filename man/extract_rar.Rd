@@ -2,15 +2,20 @@
 % Please edit documentation in R/HE-io.R
 \name{extract_rar}
 \alias{extract_rar}
-\title{Extract files from a rar file (linux)}
+\title{Extract files from a rar file (only works on linux)}
 \usage{
-extract_rar(rar_file, dest_dir = NULL)
+extract_rar(rar_file, dest_dir = NULL, overwrite = FALSE, quiet = TRUE)
 }
 \arguments{
 \item{rar_file}{a file path to a 'filename.rar'}
 
-\item{dest_dir}{path to extract shape files
-is both readable and writable. Default is FALSE.}
+\item{dest_dir}{path to extract shape files}
+
+\item{overwrite}{logical, use overwrite = TRUE to overwrite
+pre-existent files.}
+
+\item{quiet}{Hide printed output, messages, warnings, and errors
+(TRUE, the default), or display them as they occur?}
 }
 \value{
 character vector with shape files path
@@ -20,8 +25,9 @@ This function extract files from a rar file
 }
 \details{
 This function has the side effect of generating a
-directory with the uncompressed files in the HEgis
-package directory ('iextdata').
+directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
+package directory (\code{system.file("extdata",package = "HEgis")}).
+File are extracted on dest_dir when it is not \code{NULL}.
 }
 \examples{
 \dontrun{
