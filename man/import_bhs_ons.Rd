@@ -2,30 +2,31 @@
 % Please edit documentation in R/HE-io.R
 \name{import_bhs_ons}
 \alias{import_bhs_ons}
-\title{Import shape files with watersheds polygons from ONS hydropower plants}
+\title{Import shape files with watersheds polygons from ONS Hydro Power plants}
 \source{
 The data were kindly provided by Saulo Aires
 (Water Resources Specialist from ANA) through Prof.
 Carlos Lima (UnB, e-mail in 2020-03-17).
 }
 \usage{
-import_bhs_ons(shape_file, verbose = FALSE)
+import_bhs_ons(shape_file, quiet = FALSE)
 }
 \arguments{
 \item{shape_file}{A character scalar. Path to shape file.}
 
-\item{verbose}{A logical scalar. If TRUE prints data structure.}
+\item{quiet}{Logical. Hide printed output data structure or display them as
+they occur? Default FALSE.}
 }
 \value{
-tibble
+a \link[tibble:tibble-package]{tibble}
 }
 \description{
-Import shape files with watersheds polygons from ONS hydropower plants
+Import shape files with watersheds polygons from ONS Hydro Power plants
 }
 \details{
 This function was made to import a specific
-file (e.g. 'BaciasHidrograficasONS_JUNTOS.shp'). It will be extended to
-the files in 'BaciasHidrograficasONS_SEPARADO.rar'.
+file (e.g. \code{BaciasHidrograficasONS_JUNTOS.shp}). It will be extended to
+the files in \code{BaciasHidrograficasONS_SEPARADO.rar}.
 }
 \examples{
 \dontrun{
@@ -38,7 +39,7 @@ if (interactive()) {
   shapes <- extract_rar(bhs_rar_file)
   shapes
   bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes))]
-  pols_bhs <- import_bhs_ons(bhs_shape_file, verbose = TRUE)
+  pols_bhs <- import_bhs_ons(bhs_shape_file)
 }
 }
 }

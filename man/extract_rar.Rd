@@ -2,7 +2,7 @@
 % Please edit documentation in R/HE-io.R
 \name{extract_rar}
 \alias{extract_rar}
-\title{Extract files from a rar file (only works on linux)}
+\title{Extract files from a rar file (only works on Linux)}
 \usage{
 extract_rar(rar_file, dest_dir = NULL, overwrite = FALSE, quiet = TRUE)
 }
@@ -27,7 +27,7 @@ This function extract files from a rar file
 This function has the side effect of generating a
 directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
 package directory (\code{system.file("extdata",package = "HEgis")}).
-File are extracted on dest_dir when it is not \code{NULL}.
+File are extracted on \code{dest_dir} when it is not \code{NULL}.
 }
 \examples{
 \dontrun{
