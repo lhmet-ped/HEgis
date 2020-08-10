@@ -1,6 +1,6 @@
 
 
-#' Extract files from a rar file (only works on linux)
+#' Extract files from a rar file (only works on Linux)
 #'
 #' This function extract files from a rar file
 #'
@@ -14,7 +14,7 @@
 #' @details This function has the side effect of generating a
 #' directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
 #' package directory (\code{system.file("extdata",package = "HEgis")}).
-#' File are extracted on dest_dir when it is not \code{NULL}.
+#' File are extracted on \code{dest_dir} when it is not \code{NULL}.
 #' @export
 #' @examples
 #' \dontrun{
@@ -102,10 +102,11 @@ extract_rar <- function(
 
 # -----------------------------------------------------------------------------
 
-#' Import shape files with watersheds polygons from ONS hydropower plants
+#' Import shape files with watersheds polygons from ONS Hydro Power plants
 #'
 #' @param shape_file A character scalar. Path to shape file.
-#' @param verbose A logical scalar. If TRUE prints data structure.
+#' @param quiet Logical. Hide printed output data structure or display them as
+#' they occur? Default FALSE.
 #'
 #' @importFrom readr parse_guess
 #' @importFrom dplyr %>%
@@ -115,8 +116,8 @@ extract_rar <- function(
 #' @importFrom tidyselect vars_select_helpers
 #'
 #' @details This function was made to import a specific
-#' file (e.g. 'BaciasHidrograficasONS_JUNTOS.shp'). It will be extended to
-#' the files in 'BaciasHidrograficasONS_SEPARADO.rar'.
+#' file (e.g. `BaciasHidrograficasONS_JUNTOS.shp`). It will be extended to
+#' the files in `BaciasHidrograficasONS_SEPARADO.rar`.
 #'
 #' @source The data were kindly provided by Saulo Aires
 #' (Water Resources Specialist from ANA) through Prof.
@@ -124,7 +125,7 @@ extract_rar <- function(
 #'
 #' @author Jonatan Tatsch
 #'
-#' @return tibble
+#' @return a [tibble][tibble::tibble-package]
 #' @export
 #'
 #' @examples
@@ -138,10 +139,10 @@ extract_rar <- function(
 #'   shapes <- extract_rar(bhs_rar_file)
 #'   shapes
 #'   bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes))]
-#'   pols_bhs <- import_bhs_ons(bhs_shape_file, verbose = TRUE)
+#'   pols_bhs <- import_bhs_ons(bhs_shape_file)
 #' }
 #' }
-import_bhs_ons <- function(shape_file, verbose = FALSE) {
+import_bhs_ons <- function(shape_file, quiet = FALSE) {
 
   # shape_file <- shapes[grep("Bacias", path_file(shapes))]
 
@@ -177,7 +178,7 @@ import_bhs_ons <- function(shape_file, verbose = FALSE) {
       )
     )
 
-  if (verbose) print(dplyr::glimpse(pols))
+  if (!quiet) print(dplyr::glimpse(pols))
 
   pols
 }
