@@ -6,10 +6,15 @@
 #'
 #' @param rar_file a file path to a 'filename.rar'
 #' @param dest_dir path to extract shape files
+#' @param overwrite logical, use overwrite = TRUE to overwrite
+#' pre-existent files.
+#' @param quiet Hide printed output, messages, warnings, and errors
+#' (TRUE, the default), or display them as they occur?
 #' @return character vector with shape files path
 #' @details This function has the side effect of generating a
-#' directory with the uncompressed files in the HEgis
-#' package directory ('iextdata').
+#' directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
+#' package directory (\code{system.file("extdata",package = "HEgis")}).
+#' File are extracted on dest_dir when it is not \code{NULL}.
 #' @export
 #' @examples
 #' \dontrun{
