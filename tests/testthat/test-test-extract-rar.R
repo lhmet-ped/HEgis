@@ -19,8 +19,10 @@ test_that("test the decompression of rar file in the folder of compressed file",
     dest_dir = NULL
   )
 
-
   output <- length(grep("\\.shp", basename(output)))
+  # cleanup
+  fs::dir_delete(rar_dir)
+
   expect_equal(output, 2L)
 })
 
