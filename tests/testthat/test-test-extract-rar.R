@@ -32,3 +32,6 @@ test_that("test for a inexistent file", {
   )
 })
 
+# TO DO:
+# teste de descompactar arquivos em diretório arbitrário
+

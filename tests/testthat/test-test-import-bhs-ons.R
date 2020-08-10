@@ -7,7 +7,10 @@ test_that("test for a inexistent shape file", {
   )
 })
 
+# TO DO:
+#test_that("teste for a inexistent shape file", {
 #
+#})
 #   bhs_rar_file <- system.file(
 #     "extdata",
 #     "BaciasHidrograficasONS_JUNTOS.rar",
