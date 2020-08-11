@@ -14,7 +14,7 @@
 #' @details This function has the side effect of generating a
 #' directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
 #' package directory (\code{system.file("extdata",package = "HEgis")}).
-#' File are extracted on \code{dest_dir} when it is not \code{NULL}.
+#' The files are extracted on \code{dest_dir} when it is not \code{NULL}.
 #' @export
 #' @note This function is a wrapper to call \code{unrar}. It is required you
 #' have \code{unrar} linux library installed. You can install it with

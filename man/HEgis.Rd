@@ -3,9 +3,10 @@
 \docType{package}
 \name{HEgis}
 \alias{HEgis}
+\alias{HEgis-package}
 \title{HEgis: Functions To Import GIS Data Needed For The HYDROENGIE Project}
 \description{
-The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project.
+The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D project.
 }
 \section{HEgis functions}{
 
@@ -16,3 +17,7 @@ The main functions are:
 }
 }
 
+\author{
+\strong{Maintainer}: Jônatan Tatsch \email{jdtatsch@gmail.com}
+
+}
