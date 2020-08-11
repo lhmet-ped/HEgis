@@ -1,33 +1,36 @@
 Package: HEgis
-Title: Functions To Import GIS Data Needed For The HYDROENGIE Project
+Title: Functions To Import GIS Data Needed For The HYDROENGIE
+    Project
 Version: 0.2.1
 Authors@R: 
     person(given = "Jônatan",
            family = "Tatsch",
            role = c("aut", "cre"),
            email = "jdtatsch@gmail.com")
-Description: The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project.
+Description: The goal of HEgis is to prepare GIS data for use in
+    HydroEngie R&D project.
 License: MIT + file LICENSE
+Depends: 
+    R (>= 4.0)
+SystemRequirements:	unrar library version 5.61 or later
+Imports: 
+    assertive,
+    assertthat,
+    checkmate,
+    dplyr,
+    fs,
+    magrittr,
+    raster,
+    readr,
+    sf,
+    stringr,
+    tibble,
+    tidyselect
 Suggests: 
-    testthat,
-    spelling
+    spelling,
+    testthat
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: 
-    magrittr,
-    tidyselect,
-    dplyr,
-    raster,
-    sf,
-    fs,
-    assertive,
-    assertthat,
-    tibble,
-    checkmate,
-    readr,
-    stringr
-Language: en-US
-Depends: 
-    R (>= 4.0)
