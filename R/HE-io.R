@@ -16,7 +16,9 @@
 #' package directory (\code{system.file("extdata",package = "HEgis")}).
 #' File are extracted on \code{dest_dir} when it is not \code{NULL}.
 #' @export
-#' @note This function is a wrapper to call \code{unrar}.
+#' @note This function is a wrapper to call \code{unrar}. It is required you
+#' have \code{unrar} linux library installed. You can install it with
+#' 'apt install unrar'.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
