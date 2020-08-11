@@ -30,12 +30,127 @@ library(devtools)
 install_github("lhmet/HEgis")
 ```
 
+<!-- BEFORE RUN (RE)INSTALL THE PACKAGE -->
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+So far there are functions for:
+
+- extract shapefiles from compressed file (`.rar`)
+
+- import shape file contained in the `.rar` file
+
+This is a basic example which shows how to extract shape files from the rar file 
+(`BaciasHidrograficasONS_JUNTOS.rar`) available with `HEgis` package.
 
 ```{r example}
 library(HEgis)
-## basic example code
+
+## rar file included in the package
+bhs_rar_file <- system.file(
+   "extdata",
+   "BaciasHidrograficasONS_JUNTOS.rar",
+    package = "HEgis"
+)
+# extracted shapefiles
+shapes <- extract_rar(bhs_rar_file, overwrite = TRUE)
+shapes
 ```
+Now we select the shape of interest and then import it.
+
+```{r}
+shape_bhs <- shapes[grep("Bacias", fs::path_file(shapes))]
+pols_bhs <- import_bhs_ons(shape_bhs)
+sf::st_crs(pols_bhs) <- "+proj=longlat +datum=WGS84"
+class(pols_bhs)
+sf::st_geometry_type(pols_bhs, FALSE)
+```
+
+
+
+```{r, fig.align='center', fig.asp = 1}
+library(sf)
+library(spData)
+#sa <- world[world$continent == "South America", ]
+sa <- world[world$name_long == "Brazil", ]
+plot(st_geometry(sa), axes = TRUE, border = 'grey')
+plot(st_geometry(pols_bhs),
+     col = sf.colors(nrow(pols_bhs), categorical = TRUE), 
+     border = 'grey20', 
+     add = TRUE
+     )
+#plotrix::spread.labels(x = cs[, 1], y = cs[, 2], labels = pols_bhs$nome, )
+```
+
+
+```{r, eval = FALSE}
+library(leaflet)
+library(leaflet.extras)
+library(htmltools)
+
+# cs <- tibble::as_tibble(st_coordinates(st_centroid(st_geometry(pols_bhs))))
+# cs$nome <- pols_bhs$nome
+# names(cs)[1:2] <- c("longitude", "latitude")
+
+pal <- colorFactor(
+       palette = "Paired",
+       levels = pols_bhs$nome[order(pols_bhs$adkm2, decreasing = TRUE)]
+       )
+
+p <- leaflet() %>%
+  addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addPolygons(
+    data = pols_bhs,
+    group = ~codONS,
+    color = "#444444",
+    weight = 1,
+    smoothFactor = 0.5,
+    opacity = 1.0,
+    fillOpacity = 0.5,
+    # fillColor = ~colorQuantile("YlOrRd", ALAND)(ALAND),
+     #fillColor = ~colorFactor("Paired", nome)(nome),
+    fillColor = ~pal(nome),
+     #fillColor = ~colorQuantile("YlOrRd", adkm2)(adkm2),
+    highlightOptions = highlightOptions(
+      color = "white",
+      weight = 2,
+      bringToFront = TRUE, 
+    )
+  )
+p
+```
+
+
+
+
+```{r, fig.align='center', fig.asp = 1}
+o <- order(pols_bhs$adkm2)
+
+for(i in o){
+  # i <- o[1]
+plot(sf::st_geometry(sa),
+     axes = TRUE,
+     border = 'grey', 
+     main = paste0(
+       pols_bhs$nome[i], 
+       " (", pols_bhs$codONS[i], ") ",
+       "Área: ",
+       round(pols_bhs$adkm2[i]), 
+       " km²"
+       )
+     )
+plot(sf::st_geometry(pols_bhs),
+     col = NA, 
+     border = 'red', lwd = 2,
+     add = TRUE
+     )
+plot(st_geometry(pols_bhs)[i], 
+     add = TRUE, 
+     col = 1
+     )  
+}
+```
+
+
+
 
