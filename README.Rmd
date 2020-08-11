@@ -21,6 +21,18 @@ knitr::opts_chunk$set(
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project.
 
+There are two functions: `extract_rar()` and `import_bhs_ons()`. The first one
+extract files from a `.rar` file. `rar` files can be uncompressed in Linux 
+using `unrar`[^1] tool from the command line. Install `unrar` tool using your 
+Linux distributions' package manager. 
+
+```
+$ sudo apt update && sudo apt install --assume-yes unrar # Ubuntu and Debian
+```
+
+[^1]: It's developed by [RARLAB](https://www.rarlab.com/download.htm) and made 
+available in Linux and other Unix based operating systems.
+
 ## Installation
 
 You can install HEgis from [github](https://github.com/lhmet/HEgis) with:
