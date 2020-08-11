@@ -16,6 +16,7 @@
 #' package directory (\code{system.file("extdata",package = "HEgis")}).
 #' File are extracted on \code{dest_dir} when it is not \code{NULL}.
 #' @export
+#' @note This function is a wrapper to call \code{unrar}.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -29,6 +30,7 @@
 #' }
 #' }
 #' @importFrom checkmate assert_file_exists test_path_for_output assert_os
+#' assert_true
 #' @importFrom assertthat assert_that has_extension
 #' @importFrom fs path_ext_remove dir_ls
 
@@ -78,6 +80,12 @@ extract_rar <- function(
   if(checkmate::test_os("linux")) {
     # capture.output(out_call_unrar <- system(cmd,intern = TRUE),file = "NUL")
     if(quiet){
+
+      # check unrar is available
+      installed_unrar <- system("which unrar", intern = FALSE)
+      is_unrar_installed <- installed_unrar == 0
+      checkmate::assert_true(is_unrar_installed)
+
       out_call_unrar <- system(cmd, intern = FALSE, ignore.stdout = quiet)
 
     } #else {
