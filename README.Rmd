@@ -66,55 +66,66 @@ class(pols_bhs)
 sf::st_geometry_type(pols_bhs, FALSE)
 ```
 
-
+We can view the major watersheds (`r nrow(pols_bhs)`) from SIN by:
 
 ```{r, fig.align='center', fig.asp = 1}
 library(sf)
 library(spData)
-#sa <- world[world$continent == "South America", ]
-sa <- world[world$name_long == "Brazil", ]
-plot(st_geometry(sa), axes = TRUE, border = 'grey')
-plot(st_geometry(pols_bhs),
-     col = sf.colors(nrow(pols_bhs), categorical = TRUE), 
-     border = 'grey20', 
-     add = TRUE
+sa <- world[world$continent == "South America", ]
+br <- world[world$name_long == "Brazil", ]
+
+set.seed(12)
+ord_areas <- order(pols_bhs$adkm2, decreasing = TRUE)
+cols <- sample(colors(), size = nrow(pols_bhs))
+plot(sf::st_geometry(sa), 
+     axes = TRUE,
+     border = "grey", 
+     xlim = c(-80, -30),
+     ylim = c(-40, 10)
      )
-#plotrix::spread.labels(x = cs[, 1], y = cs[, 2], labels = pols_bhs$nome, )
+plot(sf::st_geometry(br), axes = TRUE, border = "grey60", lwd = 2, add = TRUE)
+# from highest to lower drainage areas
+for (i in ord_areas) {
+  # i <- ord_areas[1]
+  plot(st_geometry(pols_bhs)[i],
+    add = TRUE,
+    col = cols[i],
+    border = 1,
+    lwd = 0.7
+  )
+}
+
 ```
 
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo=FALSE}
 library(leaflet)
 library(leaflet.extras)
 library(htmltools)
 
-# cs <- tibble::as_tibble(st_coordinates(st_centroid(st_geometry(pols_bhs))))
-# cs$nome <- pols_bhs$nome
-# names(cs)[1:2] <- c("longitude", "latitude")
-
-pal <- colorFactor(
-       palette = "Paired",
-       levels = pols_bhs$nome[order(pols_bhs$adkm2, decreasing = TRUE)]
-       )
+pols_bhs$nome <- ordered(
+  x  = pols_bhs$nome, 
+  levels = pols_bhs$nome[order(pols_bhs$adkm2, decreasing = TRUE)]
+  )
 
 p <- leaflet() %>%
   addProviderTiles("Esri.NatGeoWorldMap") %>%
   addPolygons(
     data = pols_bhs,
-    group = ~codONS,
+    #group = ~codONS,
     color = "#444444",
     weight = 1,
     smoothFactor = 0.5,
     opacity = 1.0,
     fillOpacity = 0.5,
     # fillColor = ~colorQuantile("YlOrRd", ALAND)(ALAND),
-     #fillColor = ~colorFactor("Paired", nome)(nome),
-    fillColor = ~pal(nome),
+     fillColor = ~colorFactor("Paired", nome)(nome),
+    #fillColor = pal,
      #fillColor = ~colorQuantile("YlOrRd", adkm2)(adkm2),
     highlightOptions = highlightOptions(
       color = "white",
       weight = 2,
-      bringToFront = TRUE, 
+      bringToFront = FALSE, 
     )
   )
 p
@@ -123,11 +134,14 @@ p
 
 
 
-```{r, fig.align='center', fig.asp = 1}
-o <- order(pols_bhs$adkm2)
 
-for(i in o){
-  # i <- o[1]
+
+
+```{r, fig.align='center', fig.asp = 1, eval = FALSE, echo = FALSE}
+ord_areas_cresc <- order(pols_bhs$adkm2)
+
+for(i in ord_areas_cresc){
+  # i <- ordem_areas_cresc[1]
 plot(sf::st_geometry(sa),
      axes = TRUE,
      border = 'grey', 
@@ -150,7 +164,4 @@ plot(st_geometry(pols_bhs)[i],
      )  
 }
 ```
-
-
-
 

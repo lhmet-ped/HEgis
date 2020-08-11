@@ -105,6 +105,8 @@ sf::st_geometry_type(pols_bhs, FALSE)
 #> 18 Levels: GEOMETRY POINT LINESTRING POLYGON MULTIPOINT ... TRIANGLE
 ```
 
+We can view the major watersheds (87) from SIN by:
+
 ``` r
 library(sf)
 #> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1
@@ -112,85 +114,29 @@ library(spData)
 #> To access larger datasets in this package, install the spDataLarge
 #> package with: `install.packages('spDataLarge',
 #> repos='https://nowosad.github.io/drat/', type='source')`
-#sa <- world[world$continent == "South America", ]
-sa <- world[world$name_long == "Brazil", ]
-plot(st_geometry(sa), axes = TRUE, border = 'grey')
-plot(st_geometry(pols_bhs),
-     col = sf.colors(nrow(pols_bhs), categorical = TRUE), 
-     border = 'grey20', 
-     add = TRUE
-     )
-```
+sa <- world[world$continent == "South America", ]
+br <- world[world$name_long == "Brazil", ]
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" />
-
-``` r
-#plotrix::spread.labels(x = cs[, 1], y = cs[, 2], labels = pols_bhs$nome, )
-```
-
-``` r
-library(leaflet)
-library(leaflet.extras)
-library(htmltools)
-
-# cs <- tibble::as_tibble(st_coordinates(st_centroid(st_geometry(pols_bhs))))
-# cs$nome <- pols_bhs$nome
-# names(cs)[1:2] <- c("longitude", "latitude")
-
-pal <- colorFactor(
-       palette = "Paired",
-       levels = pols_bhs$nome[order(pols_bhs$adkm2, decreasing = TRUE)]
-       )
-
-p <- leaflet() %>%
-  addProviderTiles("Esri.NatGeoWorldMap") %>%
-  addPolygons(
-    data = pols_bhs,
-    group = ~codONS,
-    color = "#444444",
-    weight = 1,
-    smoothFactor = 0.5,
-    opacity = 1.0,
-    fillOpacity = 0.5,
-    # fillColor = ~colorQuantile("YlOrRd", ALAND)(ALAND),
-     #fillColor = ~colorFactor("Paired", nome)(nome),
-    fillColor = ~pal(nome),
-     #fillColor = ~colorQuantile("YlOrRd", adkm2)(adkm2),
-    highlightOptions = highlightOptions(
-      color = "white",
-      weight = 2,
-      bringToFront = TRUE, 
-    )
-  )
-p
-```
-
-``` r
-o <- order(pols_bhs$adkm2)
-
-for(i in o){
-  # i <- o[1]
-plot(sf::st_geometry(sa),
+set.seed(12)
+ord_areas <- order(pols_bhs$adkm2, decreasing = TRUE)
+cols <- sample(colors(), size = nrow(pols_bhs))
+plot(sf::st_geometry(sa), 
      axes = TRUE,
-     border = 'grey', 
-     main = paste0(
-       pols_bhs$nome[i], 
-       " (", pols_bhs$codONS[i], ") ",
-       "Área: ",
-       round(pols_bhs$adkm2[i]), 
-       " km²"
-       )
+     border = "grey", 
+     xlim = c(-80, -30),
+     ylim = c(-40, 10)
      )
-plot(sf::st_geometry(pols_bhs),
-     col = NA, 
-     border = 'red', lwd = 2,
-     add = TRUE
-     )
-plot(st_geometry(pols_bhs)[i], 
-     add = TRUE, 
-     col = 1
-     )  
+plot(sf::st_geometry(br), axes = TRUE, border = "grey60", lwd = 2, add = TRUE)
+# from highest to lower drainage areas
+for (i in ord_areas) {
+  # i <- ord_areas[1]
+  plot(st_geometry(pols_bhs)[i],
+    add = TRUE,
+    col = cols[i],
+    border = 1,
+    lwd = 0.7
+  )
 }
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-3.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-4.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-5.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-6.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-7.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-8.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-9.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-10.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-11.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-12.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-13.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-14.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-15.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-16.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-17.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-18.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-19.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-20.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-21.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-22.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-23.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-24.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-25.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-26.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-27.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-28.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-29.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-30.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-31.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-32.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-33.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-34.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-35.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-36.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-37.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-38.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-39.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-40.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-41.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-42.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-43.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-44.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-45.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-46.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-47.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-48.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-49.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-50.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-51.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-52.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-53.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-54.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-55.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-56.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-57.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-58.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-59.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-60.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-61.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-62.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-63.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-64.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-65.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-66.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-67.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-68.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-69.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-70.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-71.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-72.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-73.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-74.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-75.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-76.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-77.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-78.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-79.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-80.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-81.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-82.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-83.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-84.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-85.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-86.png" width="100%" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-87.png" width="100%" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" />
