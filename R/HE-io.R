@@ -36,7 +36,8 @@ extract_rar <- function(
                         rar_file,
                         dest_dir = NULL,
                         overwrite = FALSE,
-                        quiet = TRUE) {
+                        quiet = TRUE
+                        ) {
 
   rar_file <- fs::path_real(rar_file)
 
