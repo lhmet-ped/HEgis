@@ -1,7 +1,7 @@
 Package: HEgis
 Title: Functions To Import GIS Data Needed For The HYDROENGIE
     Project
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: 
     person(given = "Jônatan",
            family = "Tatsch",
@@ -12,7 +12,7 @@ Description: The goal of HEgis is to prepare GIS data for use in
 License: MIT + file LICENSE
 Depends: 
     R (>= 4.0)
-SystemRequirements:	unrar library version 5.61 or later
+SystemRequirements: unrar library version 5.61 or later
 Imports: 
     assertive,
     assertthat,
