@@ -1,10 +1,10 @@
 
 
-#' Extract files from a rar file (only works on Linux)
+#' Extract files from a \code{.rar} file (only works on Linux)
 #'
-#' This function extract files from a rar file
+#' This function extract files from a \code{.rar} file
 #'
-#' @param rar_file a file path to a 'filename.rar'
+#' @param rar_file a file path to a \code{file.rar}
 #' @param dest_dir path to extract shape files
 #' @param overwrite logical, use overwrite = TRUE to overwrite
 #' pre-existent files.
@@ -12,12 +12,13 @@
 #' (TRUE, the default), or display them as they occur?
 #' @return character vector with shape files path
 #' @details This function has the side effect of generating a
-#' directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
+#' directory \code{BaciasHidrograficasONS_JUNTOS}' with the uncompressed files
+#' in the \pkg{HEgis}
 #' package directory (\code{system.file("extdata",package = "HEgis")}).
 #' The files are extracted on \code{dest_dir} when it is not \code{NULL}.
 #' @export
 #' @note This function is a wrapper to call \code{unrar}. It is required you
-#' have \code{unrar} linux library installed. You can install it with
+#' have \code{unrar} Linux library installed. You can install it with
 #' 'apt install unrar'.
 #' @examples
 #' \dontrun{
@@ -74,7 +75,7 @@ extract_rar <- function(
       cmd <- paste0("unrar e -o+ ", rar_file, " ", dir_extract_rar)
     } else {
       stop("There are files in the folder. Use overwrite = TRUE to
-           overwrite pre-existent files.")
+           overwrite existing files.")
     }
   }
 
@@ -134,7 +135,7 @@ extract_rar <- function(
 #' (Water Resources Specialist from ANA) through Prof.
 #' Carlos Lima (UnB, e-mail in 2020-03-17).
 #'
-#' @author Jonatan Tatsch
+#' @author Jônatan Tatsch
 #'
 #' @return a [tibble][tibble::tibble-package]
 #' @export
