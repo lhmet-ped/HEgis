@@ -18,6 +18,6 @@ The main functions are:
 }
 
 \author{
-\strong{Maintainer}: Jônatan Tatsch \email{jdtatsch@gmail.com}
+\strong{Maintainer}: Jônatan Tatsch \email{lhmet@ufsm.br}
 
 }
