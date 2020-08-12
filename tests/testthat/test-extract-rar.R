@@ -1,7 +1,7 @@
 context("extract rar file")
 
 
-test_that("test the decompression of rar file in the folder of compressed file", {
+test_that("test extraction of rar file in the folder of compressed file", {
 
   rar_file <- system.file(
     "extdata",
@@ -19,6 +19,10 @@ test_that("test the decompression of rar file in the folder of compressed file",
     dest_dir = NULL
   )
 
+  if(!checkmate::test_os("linux")){
+    expect_error(basename(output))
+  }
+
   output <- length(grep("\\.shp", basename(output)))
   # cleanup
   fs::dir_delete(rar_dir)
@@ -26,7 +30,7 @@ test_that("test the decompression of rar file in the folder of compressed file",
   expect_equal(output, 2L)
 })
 
-test_that("test the decompression of rar file in a arbitraty folder", {
+test_that("test extraction of rar file in a arbitraty folder", {
   # rm -rf /tmp/R*
   tmpd <- tempdir()
   output <- extract_rar(
@@ -37,7 +41,13 @@ test_that("test the decompression of rar file in a arbitraty folder", {
     ),
     dest_dir = tmpd
   )
+  if(!checkmate::test_os("linux")){
+    expect_error(basename(output))
+  }
   output <- length(grep("\\.shp", basename(output)))
+  if(checkmate::test_os("windows")){
+
+  }
   expect_equal(output, 2L)
 })
 
