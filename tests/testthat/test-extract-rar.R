@@ -21,6 +21,7 @@ test_that("test extraction of rar file in the folder of compressed file", {
 
   if(!checkmate::test_os("linux")){
     expect_error(basename(output))
+    return(NULL)
   }
 
   output <- length(grep("\\.shp", basename(output)))
@@ -43,6 +44,7 @@ test_that("test extraction of rar file in a arbitraty folder", {
   )
   if(!checkmate::test_os("linux")){
     expect_error(basename(output))
+    return(NULL)
   }
   output <- length(grep("\\.shp", basename(output)))
   if(checkmate::test_os("windows")){
