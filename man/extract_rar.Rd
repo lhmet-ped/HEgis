@@ -2,12 +2,12 @@
 % Please edit documentation in R/HE-io.R
 \name{extract_rar}
 \alias{extract_rar}
-\title{Extract files from a rar file (only works on Linux)}
+\title{Extract files from a \code{.rar} file (only works on Linux)}
 \usage{
 extract_rar(rar_file, dest_dir = NULL, overwrite = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{rar_file}{a file path to a 'filename.rar'}
+\item{rar_file}{a file path to a \code{file.rar}}
 
 \item{dest_dir}{path to extract shape files}
 
@@ -21,17 +21,18 @@ pre-existent files.}
 character vector with shape files path
 }
 \description{
-This function extract files from a rar file
+This function extract files from a \code{.rar} file
 }
 \details{
 This function has the side effect of generating a
-directory 'BaciasHidrograficasONS_JUNTOS' with the uncompressed files in the HEgis
+directory \code{BaciasHidrograficasONS_JUNTOS}' with the uncompressed files
+in the \pkg{HEgis}
 package directory (\code{system.file("extdata",package = "HEgis")}).
-File are extracted on \code{dest_dir} when it is not \code{NULL}.
+The files are extracted on \code{dest_dir} when it is not \code{NULL}.
 }
 \note{
 This function is a wrapper to call \code{unrar}. It is required you
-have \code{unrar} linux library installed. You can install it with
+have \code{unrar} Linux library installed. You can install it with
 'apt install unrar'.
 }
 \examples{

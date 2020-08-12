@@ -44,5 +44,5 @@ if (interactive()) {
 }
 }
 \author{
-Jonatan Tatsch
+Jônatan Tatsch
 }
