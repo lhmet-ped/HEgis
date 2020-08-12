@@ -6,7 +6,7 @@ Authors@R:
     person(given = "Jônatan",
            family = "Tatsch",
            role = c("aut", "cre"),
-           email = "jdtatsch@gmail.com")
+           email = "lhmet@ufsm.br")
 Description: The goal of HEgis is to prepare GIS data for use in
     HydroEngie R&D project.
 License: MIT + file LICENSE
@@ -20,11 +20,9 @@ Imports:
     dplyr,
     fs,
     magrittr,
-    raster,
     readr,
     sf,
     stringr,
-    tibble,
     tidyselect
 Suggests: 
     spelling,
