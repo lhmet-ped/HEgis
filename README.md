@@ -12,12 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The goal of HEgis is to prepare GIS data for use in HydroEngie R\&D
 project.
 
-There are two functions: `extract_rar()` and `import_bhs_ons()`. The
-first one extract files from a `.rar` file. `rar` files can be
-uncompressed in Linux using `unrar`\[1\] tool from the command line.
-Install `unrar` tool using your Linux distributions’ package manager.
-
-    $ sudo apt update && sudo apt install --assume-yes unrar # Ubuntu and Debian
+So far now `import_bhs_ons()` is the only function.
 
 ## Installation
 
@@ -33,42 +28,51 @@ install_github("lhmet/HEgis")
 
 ## Example
 
-So far there are functions for:
-
-  - extract shapefiles from compressed file (`.rar`)
-
-  - import shape file contained in the `.rar` file
-
-This is a basic example which shows how to extract shape files from a
-`.rar` file available with `HEgis` package.
+A shapefile with the watersheds of major Hydroelectric Power plants from
+ONS is available with `{HEgis}` package.
 
 ``` r
+library(sf)
+#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1
+library(spData)
+#> To access larger datasets in this package, install the spDataLarge
+#> package with: `install.packages('spDataLarge',
+#> repos='https://nowosad.github.io/drat/', type='source')`
 library(HEgis)
-
-## rar file included in the package
-bhs_rar_file <- system.file(
-   "extdata",
-   "BaciasHidrograficasONS_JUNTOS.rar",
-    package = "HEgis"
+bhs_rar <- system.file(
+  "extdata",
+  "BaciasHidrograficasONS_JUNTOS.rar",
+  package = "HEgis"
 )
-# extracted shapefiles
-shapes <- extract_rar(bhs_rar_file, overwrite = TRUE)
-shapes
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
-Now we select the shape of interest and then import it.
+We need to extract the `rar` file to import the shapefile. We can do
+this with `lhmetools::urar()`.
 
 ``` r
-shape_bhs <- shapes[grep("Bacias.*\\.shp$", fs::path_file(shapes))]
-pols_bhs <- import_bhs_ons(shape_bhs)
+if (requireNamespace("lhmetools", quietly = TRUE)) {
+  library(lhmetools)
+  (shps <- unrar(bhs_rar, dest_dir = tempdir()))
+}
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+```
+
+Now we select the shapefile of interest and then import it.
+
+``` r
+(bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
+#> /tmp/RtmpTseOaQ/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+```
+
+``` r
+bhs_pols <- import_bhs_ons(bhs_shp)
 #> Rows: 87
 #> Columns: 10
 #> $ codONS   <chr> "266", "291", "211", "134", "245", "197", "295", "296", "240…
@@ -109,40 +113,34 @@ pols_bhs <- import_bhs_ons(shape_bhs)
 #> 8   4699693     Fio d'água POLYGON ((-58.90869 -14.595...
 #> 9   8661373 Regulariza_ONS POLYGON ((-46.10237 -22.999...
 #> 10   829173 Regulariza_ONS POLYGON ((-49.44034 -28.132...
-sf::st_crs(pols_bhs) <- "+proj=longlat +datum=WGS84"
-class(pols_bhs)
+st_crs(bhs_pols) <- "+proj=longlat +datum=WGS84"
+class(bhs_pols)
 #> [1] "sf"         "data.frame"
-sf::st_geometry_type(pols_bhs, FALSE)
+st_geometry_type(bhs_pols, FALSE)
 #> [1] POLYGON
 #> 18 Levels: GEOMETRY POINT LINESTRING POLYGON MULTIPOINT ... TRIANGLE
 ```
 
-We can view the major watersheds (87) from SIN by:
+We can view the major watersheds (87) with:
 
 ``` r
-library(sf)
-#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1
-library(spData)
-#> To access larger datasets in this package, install the spDataLarge
-#> package with: `install.packages('spDataLarge',
-#> repos='https://nowosad.github.io/drat/', type='source')`
 sa <- world[world$continent == "South America", ]
 br <- world[world$name_long == "Brazil", ]
 
 set.seed(12)
-ord_areas <- order(pols_bhs$adkm2, decreasing = TRUE)
-cols <- sample(colors(), size = nrow(pols_bhs))
-plot(sf::st_geometry(sa), 
+ord_areas <- order(bhs_pols$adkm2, decreasing = TRUE)
+cols <- sample(colors(), size = nrow(bhs_pols))
+plot(st_geometry(sa), 
      axes = TRUE,
      border = "grey", 
      xlim = c(-80, -30),
      ylim = c(-40, 10)
      )
-plot(sf::st_geometry(br), axes = TRUE, border = "grey60", lwd = 2, add = TRUE)
+plot(st_geometry(br), axes = TRUE, border = "grey60", lwd = 2, add = TRUE)
 # from highest to lower drainage areas
 for (i in ord_areas) {
   # i <- ord_areas[1]
-  plot(st_geometry(pols_bhs)[i],
+  plot(st_geometry(bhs_pols)[i],
     add = TRUE,
     col = cols[i],
     border = 1,
@@ -151,7 +149,4 @@ for (i in ord_areas) {
 }
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" />
-
-1.  It’s developed by [RARLAB](https://www.rarlab.com/download.htm) and
-    made available in Linux and other Unix based operating systems.
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" />

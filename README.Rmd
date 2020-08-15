@@ -39,6 +39,8 @@ install_github("lhmet/HEgis")
 A shapefile with the watersheds of major Hydroelectric Power plants from ONS is available with `{HEgis}` package.
 
 ```{r example}
+library(sf)
+library(spData)
 library(HEgis)
 bhs_rar <- system.file(
   "extdata",
@@ -51,7 +53,8 @@ We need to extract the `rar` file to import the shapefile. We can do this with `
 
 ```{r unrar}
 if (requireNamespace("lhmetools", quietly = TRUE)) {
-  (shps <- unrar(bhs_rar))
+  library(lhmetools)
+  (shps <- unrar(bhs_rar, dest_dir = tempdir()))
 }
 ```
 
@@ -64,33 +67,31 @@ Now we select the shapefile of interest and then import it.
 
 ```{r}
 bhs_pols <- import_bhs_ons(bhs_shp)
-sf::st_crs(bhs_pols) <- "+proj=longlat +datum=WGS84"
+st_crs(bhs_pols) <- "+proj=longlat +datum=WGS84"
 class(bhs_pols)
-sf::st_geometry_type(bhs_pols, FALSE)
+st_geometry_type(bhs_pols, FALSE)
 ```
 
-We can view the major watersheds (`r nrow(pols_bhs)`) with:
+We can view the major watersheds (`r nrow(bhs_pols)`) with:
 
 ```{r, fig.align='center', fig.asp = 1}
-library(sf)
-library(spData)
 sa <- world[world$continent == "South America", ]
 br <- world[world$name_long == "Brazil", ]
 
 set.seed(12)
-ord_areas <- order(pols_bhs$adkm2, decreasing = TRUE)
-cols <- sample(colors(), size = nrow(pols_bhs))
-plot(sf::st_geometry(sa), 
+ord_areas <- order(bhs_pols$adkm2, decreasing = TRUE)
+cols <- sample(colors(), size = nrow(bhs_pols))
+plot(st_geometry(sa), 
      axes = TRUE,
      border = "grey", 
      xlim = c(-80, -30),
      ylim = c(-40, 10)
      )
-plot(sf::st_geometry(br), axes = TRUE, border = "grey60", lwd = 2, add = TRUE)
+plot(st_geometry(br), axes = TRUE, border = "grey60", lwd = 2, add = TRUE)
 # from highest to lower drainage areas
 for (i in ord_areas) {
   # i <- ord_areas[1]
-  plot(st_geometry(pols_bhs)[i],
+  plot(st_geometry(bhs_pols)[i],
     add = TRUE,
     col = cols[i],
     border = 1,
@@ -106,15 +107,15 @@ library(leaflet)
 library(leaflet.extras)
 library(htmltools)
 
-pols_bhs$nome <- ordered(
-  x  = pols_bhs$nome, 
-  levels = pols_bhs$nome[order(pols_bhs$adkm2, decreasing = TRUE)]
+bhs_pols$nome <- ordered(
+  x  = bhs_pols$nome, 
+  levels = bhs_pols$nome[order(bhs_pols$adkm2, decreasing = TRUE)]
   )
 
 p <- leaflet() %>%
   addProviderTiles("Esri.NatGeoWorldMap") %>%
   addPolygons(
-    data = pols_bhs,
+    data = bhs_pols,
     #group = ~codONS,
     color = "#444444",
     weight = 1,
@@ -141,7 +142,7 @@ p
 
 
 ```{r, fig.align='center', fig.asp = 1, eval = FALSE, echo = FALSE}
-ord_areas_cresc <- order(pols_bhs$adkm2)
+ord_areas_cresc <- order(bhs_pols$adkm2)
 
 for(i in ord_areas_cresc){
   # i <- ordem_areas_cresc[1]
@@ -149,19 +150,19 @@ plot(sf::st_geometry(sa),
      axes = TRUE,
      border = 'grey', 
      main = paste0(
-       pols_bhs$nome[i], 
-       " (", pols_bhs$codONS[i], ") ",
+       bhs_pols$nome[i], 
+       " (", bhs_pols$codONS[i], ") ",
        "Área: ",
-       round(pols_bhs$adkm2[i]), 
+       round(bhs_pols$adkm2[i]), 
        " km²"
        )
      )
-plot(sf::st_geometry(pols_bhs),
+plot(sf::st_geometry(bhs_pols),
      col = NA, 
      border = 'red', lwd = 2,
      add = TRUE
      )
-plot(st_geometry(pols_bhs)[i], 
+plot(st_geometry(bhs_pols)[i], 
      add = TRUE, 
      col = 1
      )  
