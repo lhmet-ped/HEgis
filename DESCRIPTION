@@ -14,10 +14,8 @@ Depends:
     R (>= 4.0)
 SystemRequirements: unrar library version 5.61 or later
 Imports: 
-    assertthat,
     checkmate,
     dplyr,
-    fs,
     magrittr,
     readr,
     sf,
