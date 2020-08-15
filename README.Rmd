@@ -21,17 +21,7 @@ knitr::opts_chunk$set(
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project.
 
-There are two functions: `extract_rar()` and `import_bhs_ons()`. The first one
-extract files from a `.rar` file. `rar` files can be uncompressed in Linux 
-using `unrar`[^1] tool from the command line. Install `unrar` tool using your 
-Linux distributions' package manager. 
-
-```
-$ sudo apt update && sudo apt install --assume-yes unrar # Ubuntu and Debian
-```
-
-[^1]: It's developed by [RARLAB](https://www.rarlab.com/download.htm) and made 
-available in Linux and other Unix based operating systems.
+So far now `import_bhs_ons()` is the only function.
 
 ## Installation
 
@@ -46,39 +36,40 @@ install_github("lhmet/HEgis")
 
 ## Example
 
-So far there are functions for:
-
-- extract shapefiles from compressed file (`.rar`)
-
-- import shape file contained in the `.rar` file
-
-This is a basic example which shows how to extract shape files from the rar file 
-(`BaciasHidrograficasONS_JUNTOS.rar`) available with `HEgis` package.
+A shapefile with the watersheds of major Hydroelectric Power plants from ONS is available with `{HEgis}` package.
 
 ```{r example}
 library(HEgis)
-
-## rar file included in the package
-bhs_rar_file <- system.file(
-   "extdata",
-   "BaciasHidrograficasONS_JUNTOS.rar",
-    package = "HEgis"
+bhs_rar <- system.file(
+  "extdata",
+  "BaciasHidrograficasONS_JUNTOS.rar",
+  package = "HEgis"
 )
-# extracted shapefiles
-shapes <- extract_rar(bhs_rar_file, overwrite = TRUE)
-shapes
 ```
-Now we select the shape of interest and then import it.
+
+We need to extract the `rar` file to import the shapefile. We can do this with `lhmetools::urar()`.
+
+```{r unrar}
+if (requireNamespace("lhmetools", quietly = TRUE)) {
+  (shps <- unrar(bhs_rar))
+}
+```
+
+Now we select the shapefile of interest and then import it.
 
 ```{r}
-shape_bhs <- shapes[grep("Bacias", fs::path_file(shapes))]
-pols_bhs <- import_bhs_ons(shape_bhs)
-sf::st_crs(pols_bhs) <- "+proj=longlat +datum=WGS84"
-class(pols_bhs)
-sf::st_geometry_type(pols_bhs, FALSE)
+(bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
 ```
 
-We can view the major watersheds (`r nrow(pols_bhs)`) from SIN by:
+
+```{r}
+bhs_pols <- import_bhs_ons(bhs_shp)
+sf::st_crs(bhs_pols) <- "+proj=longlat +datum=WGS84"
+class(bhs_pols)
+sf::st_geometry_type(bhs_pols, FALSE)
+```
+
+We can view the major watersheds (`r nrow(pols_bhs)`) with:
 
 ```{r, fig.align='center', fig.asp = 1}
 library(sf)

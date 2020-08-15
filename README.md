@@ -12,6 +12,13 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The goal of HEgis is to prepare GIS data for use in HydroEngie R\&D
 project.
 
+There are two functions: `extract_rar()` and `import_bhs_ons()`. The
+first one extract files from a `.rar` file. `rar` files can be
+uncompressed in Linux using `unrar`\[1\] tool from the command line.
+Install `unrar` tool using your Linux distributions’ package manager.
+
+    $ sudo apt update && sudo apt install --assume-yes unrar # Ubuntu and Debian
+
 ## Installation
 
 You can install HEgis from [github](https://github.com/lhmet/HEgis)
@@ -32,9 +39,8 @@ So far there are functions for:
 
   - import shape file contained in the `.rar` file
 
-This is a basic example which shows how to extract shape files from the
-rar file (`BaciasHidrograficasONS_JUNTOS.rar`) available with `HEgis`
-package.
+This is a basic example which shows how to extract shape files from a
+`.rar` file available with `HEgis` package.
 
 ``` r
 library(HEgis)
@@ -48,14 +54,20 @@ bhs_rar_file <- system.file(
 # extracted shapefiles
 shapes <- extract_rar(bhs_rar_file, overwrite = TRUE)
 shapes
+#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
 #> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
 #> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shape of interest and then import it.
 
 ``` r
-shape_bhs <- shapes[grep("Bacias", fs::path_file(shapes))]
+shape_bhs <- shapes[grep("Bacias.*\\.shp$", fs::path_file(shapes))]
 pols_bhs <- import_bhs_ons(shape_bhs)
 #> Rows: 87
 #> Columns: 10
@@ -140,3 +152,6 @@ for (i in ord_areas) {
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" />
+
+1.  It’s developed by [RARLAB](https://www.rarlab.com/download.htm) and
+    made available in Linux and other Unix based operating systems.
