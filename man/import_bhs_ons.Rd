@@ -19,7 +19,7 @@ they occur? Default FALSE.}
 }
 \value{
 object of class \code{\link[sf]{sf}} when a layer was successfully
-read; in case argument layer is missing and data source dsn does not
+read; in case argument layer is missing and data source name (\code{dsn}) does not
 contain a single layer, an object of class sf_layers is returned with the
 layer names, each with their geometry type(s). Note that the number of
 layers may also be zero.
