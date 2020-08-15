@@ -8,3 +8,4 @@
 .fix_nas_char <- function(x) {
   dplyr::if_else(stringr::str_detect(x, "-[9]{1,}"), NA_character_, x)
 }
+
