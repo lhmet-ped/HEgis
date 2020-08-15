@@ -7,6 +7,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Codecov test
+coverage](https://codecov.io/gh/lhmet/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet/HEgis?branch=master)
 <!-- badges: end -->
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R\&D
@@ -54,21 +56,21 @@ if (requireNamespace("lhmetools", quietly = TRUE)) {
   library(lhmetools)
   (shps <- unrar(bhs_rar, dest_dir = tempdir()))
 }
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/Rtmpptvi5u/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpIlXxkm/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r

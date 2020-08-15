@@ -24,7 +24,8 @@ Imports:
 Suggests: 
     spelling,
     testthat,
-    lhmetools (>= 0.0.1)
+    lhmetools (>= 0.0.1),
+    covr
 Encoding: UTF-8
 Language: en-US
 LazyData: true
