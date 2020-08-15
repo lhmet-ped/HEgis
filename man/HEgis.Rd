@@ -12,7 +12,6 @@ The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D project
 
 The main functions are:
 \itemize{
-\item \code{\link{extract_rar}}
 \item \code{\link{import_bhs_ons}}
 }
 }
