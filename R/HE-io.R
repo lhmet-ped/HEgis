@@ -69,7 +69,7 @@ import_bhs_ons <- function(shape_file, quiet = FALSE) {
     dplyr::mutate(
       dplyr::across(
         tidyselect::vars_select_helpers$where(is.numeric),
-        .fix_nas
+        .fix_nas_num
       ),
       dplyr::across(
         dplyr::starts_with("co"),

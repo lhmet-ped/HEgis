@@ -1,7 +1,7 @@
 
 # Fix var types (to be used in import_bhs_ons())
 #' @importFrom dplyr if_else
-.fix_nas <- function(x) dplyr::if_else(x < 0, NA_real_, x )
+.fix_nas_num <- function(x) dplyr::if_else(x < 0, NA_real_, x )
 
 # Set 'negative strings' as NA_character (to be used in import_bhs_ons())
 #' @importFrom stringr str_detect
