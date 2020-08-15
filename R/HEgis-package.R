@@ -2,8 +2,13 @@
 #'
 #'The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D project.
 #'
-#'@section HEgis provides \code{\link{import_bhs_ons}}, a convenience function
-#' to import the shapefile with basins of major hydroelectric power dams.
+#'@section HEgis functions:
+#'
+#' \itemize{
+#'    \code{\link{import_bhs_ons}}: a convenience function to import the
+#'    shapefile with basins of major hydroelectric power dams.
+#' }
+#'
 #'
 #'@docType package
 #'@name HEgis
