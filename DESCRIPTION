@@ -1,6 +1,6 @@
 Package: HEgis
 Title: Functions To Import GIS Data Needed For The HYDROENGIE
-    Project
+    R&D Project
 Version: 0.3.0
 Authors@R: 
     person(given = "Jônatan",
@@ -25,9 +25,12 @@ Imports:
     tidyselect
 Suggests: 
     spelling,
-    testthat
+    testthat,
+    lhmetools (>= 0.0.1)
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Remotes:  
+    lhmet/lhmetools
