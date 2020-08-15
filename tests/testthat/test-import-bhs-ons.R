@@ -3,7 +3,7 @@ context("import bhs ons")
 
 test_that("test for a inexistent shape file", {
   expect_error(
-    import_bhs_ons(shape_file = "somefile.shp", verbose = TRUE)
+    import_bhs_ons(shape_file = "somefile.shp")
   )
 })
 
