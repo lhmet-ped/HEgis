@@ -1,6 +1,7 @@
 #' HEgis: Functions To Import GIS Data Needed For The HYDROENGIE Project
 #'
-#'The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D project.
+#'The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D
+#' project.
 #'
 #'@section HEgis functions:
 #'

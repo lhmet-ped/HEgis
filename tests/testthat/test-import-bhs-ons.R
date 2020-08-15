@@ -22,7 +22,8 @@ test_that("test for a inexistent shape file", {
 #   tmp <- tempfile(fileext = ".shp")
 #   file.exists(tmp)
 #
-#   bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes), invert = TRUE)]
+#   bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes),
+#                     invert = TRUE)]
 #    import_bhs_ons(tempfile(fileext = ".shp"), verbose = TRUE)
 #
 
