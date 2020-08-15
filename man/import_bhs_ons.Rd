@@ -42,7 +42,7 @@ if (interactive()) {
   )
   if (requireNamespace("lhmetools", quietly = TRUE)) {
     (shps <- unrar(bhs_rar))
-    bhs_shp <- shapes[grep("Bacias", fs::path_file(shapes))]
+    bhs_shp <- shps[grep("Bacias.*\\\\.shp$", fs::path_file(shps))]
     bhs_pols <- import_bhs_ons(bhs_shp)
   }
 }

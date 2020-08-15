@@ -10,9 +10,10 @@ The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D project
 }
 \section{HEgis functions}{
 
-The main functions are:
+
 \itemize{
-\item \code{\link{import_bhs_ons}}
+\code{\link{import_bhs_ons}}: a convenience function to import the
+shapefile with basins of major hydroelectric power dams.
 }
 }
 
