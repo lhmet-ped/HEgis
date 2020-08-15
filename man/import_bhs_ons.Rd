@@ -18,7 +18,11 @@ import_bhs_ons(shape_file, quiet = FALSE)
 they occur? Default FALSE.}
 }
 \value{
-a \link[tibble:tibble-package]{tibble}
+object of class \code{\link[sf]{sf}} when a layer was successfully
+read; in case argument layer is missing and data source dsn does not
+contain a single layer, an object of class sf_layers is returned with the
+layer names, each with their geometry type(s). Note that the number of
+layers may also be zero.
 }
 \description{
 Import shape files with watersheds polygons from ONS Hydro Power plants
@@ -31,15 +35,16 @@ the files in \code{BaciasHidrograficasONS_SEPARADO.rar}.
 \examples{
 \dontrun{
 if (interactive()) {
-  bhs_rar_file <- system.file(
+  bhs_rar <- system.file(
     "extdata",
     "BaciasHidrograficasONS_JUNTOS.rar",
     package = "HEgis"
   )
-  shapes <- extract_rar(bhs_rar_file)
-  shapes
-  bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes))]
-  pols_bhs <- import_bhs_ons(bhs_shape_file)
+  if (requireNamespace("lhmetools", quietly = TRUE)) {
+    (shps <- unrar(bhs_rar))
+    bhs_shp <- shapes[grep("Bacias", fs::path_file(shapes))]
+    bhs_pols <- import_bhs_ons(bhs_shp)
+  }
 }
 }
 }

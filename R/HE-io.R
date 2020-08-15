@@ -1,119 +1,4 @@
-
-
-#' Extract files from a \code{.rar} file (only works on Linux)
-#'
-#' This function extract files from a \code{.rar} file
-#'
-#' @param rar_file a file path to a \code{file.rar}
-#' @param dest_dir path to extract shape files
-#' @param overwrite logical, use overwrite = TRUE to overwrite
-#' pre-existent files.
-#' @param quiet Hide printed output, messages, warnings, and errors
-#' (TRUE, the default), or display them as they occur?
-#' @return character vector with shape files path
-#' @details This function has the side effect of generating a
-#' directory \code{BaciasHidrograficasONS_JUNTOS}' with the uncompressed files
-#' in the \pkg{HEgis}
-#' package directory (\code{system.file("extdata",package = "HEgis")}).
-#' The files are extracted on \code{dest_dir} when it is not \code{NULL}.
-#' @export
-#' @note This function is a wrapper to call \code{unrar}. It is required you
-#' have \code{unrar} Linux library installed. You can install it with
-#' 'apt install unrar'.
-#' @examples
-#' \dontrun{
-#' if (interactive()) {
-#'   bhs_rar_file <- system.file(
-#'     "extdata",
-#'     "BaciasHidrograficasONS_JUNTOS.rar",
-#'     package = "HEgis"
-#'   )
-#'   shapes <- extract_rar(bhs_rar_file)
-#'   shapes
-#' }
-#' }
-#' @importFrom checkmate assert_file_exists test_path_for_output assert_os
-#' assert_true
-#' @importFrom assertthat assert_that has_extension
-#' @importFrom fs path_ext_remove dir_ls
-
-extract_rar <- function(
-                        rar_file,
-                        dest_dir = NULL,
-                        overwrite = FALSE,
-                        quiet = TRUE
-                        ) {
-
-  rar_file <- fs::path_real(rar_file)
-
-  # input checks
-  checkmate::assert_file_exists(rar_file)
-  assertthat::assert_that(
-    assertthat::has_extension(rar_file, "rar")
-  )
-
-  # create dir to extract at base dir from rar file
-  dir_extract_rar <- fs::path_ext_remove(rar_file)
-
-  if (!is.null(dest_dir)) {
-    dest_dir <- fs::path_real(dest_dir)
-    checkmate::assert_directory_exists(dest_dir)
-    dir_extract_rar <- fs::path(dest_dir, basename(dir_extract_rar))
-    #checkmate::assert_path_for_output(dir_extract_rar)
-  }
-
-  # build appropriate call to unrar
-  if (!fs::dir_exists(dir_extract_rar)) {
-
-    fs::dir_create(dir_extract_rar)
-    checkmate::assert_path_for_output(dir_extract_rar, overwrite = TRUE)
-    cmd <- paste0("unrar e ", rar_file, " ", dir_extract_rar)
-
-  } else {
-    # check if exists files in pre-existent dir
-    if(length(dir(dir_extract_rar, all.files = TRUE)) > 0 && overwrite){
-      cmd <- paste0("unrar e -o+ ", rar_file, " ", dir_extract_rar)
-    } else {
-      stop("There are files in the folder. Use overwrite = TRUE to
-           overwrite existing files.")
-    }
-  }
-
-  # decompress
-  if(checkmate::test_os("linux")) {
-    # capture.output(out_call_unrar <- system(cmd,intern = TRUE),file = "NUL")
-    if(quiet){
-
-      # check unrar is available
-      installed_unrar <- system("which unrar", intern = FALSE)
-      is_unrar_installed <- installed_unrar == 0
-      checkmate::assert_true(is_unrar_installed)
-
-      out_call_unrar <- system(cmd, intern = FALSE, ignore.stdout = quiet)
-
-    } #else {
-      #out_call_unrar <- system(cmd, intern = FALSE)
-    #}
-
-    if(out_call_unrar != 0) {
-      # print output console
-      system(cmd, intern = TRUE)
-      stop("\n unrar process returned error \n")
-    #sudo apt install unrar
-    }
-    # list of shape files
-    shapes <- fs::dir_ls(dir_extract_rar, type = "file", glob = "*.shp")
-    return(shapes)
-  }
-
-  message("This function works only on linux systems.")
-  return(NULL)
-}
-
-
-
 # -----------------------------------------------------------------------------
-
 #' Import shape files with watersheds polygons from ONS Hydro Power plants
 #'
 #' @param shape_file A character scalar. Path to shape file.
@@ -137,21 +22,26 @@ extract_rar <- function(
 #'
 #' @author Jônatan Tatsch
 #'
-#' @return a [tibble][tibble::tibble-package]
+#' @return object of class \code{\link[sf]{sf}} when a layer was successfully
+#' read; in case argument layer is missing and data source dsn does not
+#' contain a single layer, an object of class sf_layers is returned with the
+#'  layer names, each with their geometry type(s). Note that the number of
+#'  layers may also be zero.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
-#'   bhs_rar_file <- system.file(
+#'   bhs_rar <- system.file(
 #'     "extdata",
 #'     "BaciasHidrograficasONS_JUNTOS.rar",
 #'     package = "HEgis"
 #'   )
-#'   shapes <- extract_rar(bhs_rar_file)
-#'   shapes
-#'   bhs_shape_file <- shapes[grep("Bacias", fs::path_file(shapes))]
-#'   pols_bhs <- import_bhs_ons(bhs_shape_file)
+#'   if (requireNamespace("lhmetools", quietly = TRUE)) {
+#'     (shps <- unrar(bhs_rar))
+#'     bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))]
+#'     bhs_pols <- import_bhs_ons(bhs_shp)
+#'   }
 #' }
 #' }
 import_bhs_ons <- function(shape_file, quiet = FALSE) {
