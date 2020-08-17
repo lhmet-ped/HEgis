@@ -6,7 +6,8 @@
 \alias{HEgis-package}
 \title{HEgis: Functions To Import GIS Data Needed For The HYDROENGIE Project}
 \description{
-The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D project.
+The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D
+project.
 }
 \section{HEgis functions}{
 
@@ -17,6 +18,14 @@ shapefile with basins of major hydroelectric power dams.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lhmet/HEgis}
+  \item Report bugs at \url{https://github.com/lhmet/HEgis/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Jônatan Tatsch \email{lhmet@ufsm.br}
 
