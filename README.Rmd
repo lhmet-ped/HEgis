@@ -42,6 +42,7 @@ A shapefile with the watersheds of major Hydroelectric Power plants from ONS is 
 ```{r example}
 library(sf)
 library(spData)
+library()
 library(HEgis)
 bhs_rar <- system.file(
   "extdata",
@@ -67,7 +68,7 @@ Now we select the shapefile of interest and then import it.
 
 
 ```{r}
-bhs_pols <- import_bhs_ons(bhs_shp)
+bhs_pols <- import_bhs_ons(bhs_shp, quiet = TRUE)
 st_crs(bhs_pols) <- "+proj=longlat +datum=WGS84"
 class(bhs_pols)
 st_geometry_type(bhs_pols, FALSE)
@@ -101,6 +102,42 @@ for (i in ord_areas) {
 }
 
 ```
+
+Principais UHEs do Rio Paraná.
+
+```{r}
+library(tidyverse)
+#sort(bhs_pols$nome)
+bhs_pr <- filter(bhs_pols, nome %in% 
+         c("ITAIPU", "P_PRIMAVERA", "JUPIA", "A_VERMELHA", "BARRA_BONITA", "FURNAS")
+       )
+bhs_pr
+```
+
+
+```{r, fig.align='center', fig.asp = 1}
+set.seed(6)
+oa_pr <- order(bhs_pr$adkm2, decreasing = TRUE)
+cols <- sample(colors(), size = nrow(bhs_pr))
+plot(st_geometry(br), 
+     axes = TRUE, 
+     border = "grey60", 
+     lwd = 2
+     #add = TRUE
+     )
+# from highest to lower drainage areas
+for (i in oa_pr) {
+  # i <- ord_areas[1]
+  plot(st_geometry(bhs_pr)[i],
+    add = TRUE,
+    col = cols[i],
+    border = 1,
+    lwd = 0.7
+  )
+}
+```
+
+
 
 
 ```{r, eval = FALSE, echo=FALSE}
