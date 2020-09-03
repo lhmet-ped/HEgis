@@ -59,21 +59,21 @@ if (requireNamespace("lhmetools", quietly = TRUE)) {
   library(lhmetools)
   (shps <- unrar(bhs_rar, dest_dir = tempdir()))
 }
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/Rtmp9VUv6j/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/Rtmp4xgHBa/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r
@@ -120,12 +120,12 @@ Principais UHEs do Rio Paraná.
 
 ``` r
 library(tidyverse)
-#> ── Attaching packages ──────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ── Attaching packages ───────────────────────────────────────────── tidyverse 1.3.0 ──
 #> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-#> ✓ tibble  3.0.3     ✓ dplyr   1.0.1
+#> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 #> ✓ tidyr   1.1.1     ✓ stringr 1.4.0
 #> ✓ readr   1.3.1     ✓ forcats 0.5.0
-#> ── Conflicts ─────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ──────────────────────────────────────────────── tidyverse_conflicts() ──
 #> x dplyr::filter() masks stats::filter()
 #> x dplyr::lag()    masks stats::lag()
 #sort(bhs_pols$nome)
