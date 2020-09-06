@@ -4,7 +4,7 @@
 \alias{nw_down}
 \title{Download zip file from link provided by \code{nw_urls()}}
 \usage{
-nw_down(link, confhd_path = TRUE)
+nw_down(link, confhd_path = TRUE, quiet = TRUE)
 }
 \arguments{
 \item{link}{url to download data}
@@ -20,3 +20,4 @@ temporary directory of extracted data.
 \description{
 Download zip file from link provided by \code{nw_urls()}
 }
+\keyword{internal}

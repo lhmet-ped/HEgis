@@ -9,3 +9,4 @@ path_confhd_file(path)
 \description{
 Get the file path to CONFHD.DAT
 }
+\keyword{internal}

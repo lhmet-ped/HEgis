@@ -17,7 +17,4 @@ A character string naming the URL of the zip file to be downloaded.
 \description{
 Build the link to the monthly file of NEWAVE model CCEE deck of prices.
 }
-\examples{
-yyyymm = c("201809", "2018", "2018.02", "2018-03", "2018-04-01", "2018/05")
-nw_urls(yyyymm)
-}
+\keyword{internal}
