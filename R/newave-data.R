@@ -7,12 +7,8 @@
 #' @param ... other params (`timeout()` would be a good one) passed directly
 #'        to `httr::HEAD()` and/or `httr::GET()`
 #' @keywords internal
-#' @source \link{https://stackoverflow.com/questions/52911812/check-if-url-exists-in-r}
+#' @source \url{https://stackoverflow.com/questions/52911812/check-if-url-exists-in-r}
 url_exists <- function(x, non_2xx_return_value = FALSE, quiet = FALSE,...) {
-
-  suppressPackageStartupMessages({
-    require("httr", quietly = FALSE, warn.conflicts = FALSE)
-  })
 
   # you don't need thse two functions if you're alread using `purrr`
   # but `purrr` is a heavyweight compiled pacakge that introduces
@@ -123,7 +119,7 @@ nw_down <- function(link, confhd_path = TRUE, quiet = TRUE){
   #checkmate::assert_true(RCurl::url.exists(link))
   checkmate::assert_true(url_exists(link, quiet = quiet))
   zip_dest <- fs::file_temp(ext = "zip")
-  download.file(link, destfile = zip_dest)
+  utils::download.file(link, destfile = zip_dest)
   #unzip(zip_dest, list = TRUE)
   dir_ext <- fs::path_ext_remove(zip_dest)
   unzip(zip_dest, exdir = dir_ext)
@@ -145,7 +141,7 @@ nw_down <- function(link, confhd_path = TRUE, quiet = TRUE){
 #'
 #' @param confhd_file character, file path.
 #'
-#' @return
+#' @return a [tibble][tibble::tibble-package].
 #' @export
 #'
 read_confhd <- function(confhd_file) {
@@ -196,9 +192,9 @@ read_confhd <- function(confhd_file) {
 #'
 #' @inheritParams nw_urls
 #' @inheritParams nw_down
-#' @details Data is available in \link{https://www.ccee.org.br/ccee/documentos}
+#' @details Data is available in \url{https://www.ccee.org.br/ccee/documentos}
 #' after '201206'.
-#' @return
+#' @return a [tibble][tibble::tibble-package] with tidy data.
 #' @export
 #'
 #' @examples

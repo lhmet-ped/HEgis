@@ -1,3 +1,15 @@
+utils::globalVariables(
+  c("fim_hist",
+    "inic_hist",
+    "jus", "modif",
+    "num",
+    "posto",
+    "ree",
+    "ssis",
+    "unzip",
+    "v_inic"
+    )
+  )
 
 # Fix var types (to be used in import_bhs_ons())
 #' @importFrom dplyr if_else

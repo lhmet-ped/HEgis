@@ -16,10 +16,14 @@ to \code{CONFHD.DAT} file, otherwise the path to the temporary directory of
 extracted data.}
 }
 \value{
-
+a \link[tibble:tibble-package]{tibble} with tidy data.
 }
 \description{
 Get data from \code{CONFHD.DAT} file for the a given year and month
+}
+\details{
+Data is available in \url{https://www.ccee.org.br/ccee/documentos}
+after '201206'.
 }
 \examples{
 uhes_info <- confhd_data(format.Date(Sys.Date(), "\%Y\%m"))

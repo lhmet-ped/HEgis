@@ -10,7 +10,7 @@ read_confhd(confhd_file)
 \item{confhd_file}{character, file path.}
 }
 \value{
-
+a \link[tibble:tibble-package]{tibble}.
 }
 \description{
 Read data file that contains the names from Hydro Power plants and ID from

@@ -22,7 +22,12 @@ Imports:
     stringr,
     tidyselect,
     RCurl,
-    httr
+    httr,
+    curl,
+    fs,
+    glue,
+    janitor,
+    lubridate
 Suggests: 
     spelling,
     testthat,

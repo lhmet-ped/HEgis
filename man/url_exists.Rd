@@ -4,7 +4,7 @@
 \alias{url_exists}
 \title{Check if a URL exists}
 \source{
-\link{https://stackoverflow.com/questions/52911812/check-if-url-exists-in-r}
+\url{https://stackoverflow.com/questions/52911812/check-if-url-exists-in-r}
 }
 \usage{
 url_exists(x, non_2xx_return_value = FALSE, quiet = FALSE, ...)
