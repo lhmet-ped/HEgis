@@ -106,12 +106,16 @@ read_confhd <- function(confhd_file) {
                                num = as.integer(num),
                                posto = as.integer(posto),
                                jus = as.integer(jus),
-                               ree = as.integer(ree),
+                               #ree = as.integer(ree),
                                v_inic = as.numeric(v_inic),
                                modif = as.integer(modif),
                                inic_hist = as.integer(inic_hist),
                                fim_hist = as.integer(fim_hist)
                                )
+  # some times "REE" is not present in the data
+  if("ree" %in% names(confhd_data)){
+    confhd_data <- dplyr::mutate(confhd_data, ree = as.integer(ree))
+  }
   confhd_data
 }
 
