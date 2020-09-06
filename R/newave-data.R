@@ -196,7 +196,8 @@ read_confhd <- function(confhd_file) {
 #'
 #' @inheritParams nw_urls
 #' @inheritParams nw_down
-#'
+#' @details Data is available in \link{https://www.ccee.org.br/ccee/documentos}
+#' after '201206'.
 #' @return
 #' @export
 #'
