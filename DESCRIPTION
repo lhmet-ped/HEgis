@@ -20,7 +20,9 @@ Imports:
     readr,
     sf,
     stringr,
-    tidyselect
+    tidyselect,
+    RCurl,
+    httr
 Suggests: 
     spelling,
     testthat,
