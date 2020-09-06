@@ -1,3 +1,70 @@
+#' Check if a URL exists
+#' @param x a single URL
+#' @param non_2xx_return_value what to do if the site exists but the
+#'        HTTP status code is not in the `2xx` range. Default is to return `FALSE`.
+#' @param quiet if not `FALSE`, then every time the `non_2xx_return_value` condition
+#'        arises a warning message will be displayed. Default is `FALSE`.
+#' @param ... other params (`timeout()` would be a good one) passed directly
+#'        to `httr::HEAD()` and/or `httr::GET()`
+#' @keywords internal
+#' @source \link{https://stackoverflow.com/questions/52911812/check-if-url-exists-in-r}
+url_exists <- function(x, non_2xx_return_value = FALSE, quiet = FALSE,...) {
+
+  suppressPackageStartupMessages({
+    require("httr", quietly = FALSE, warn.conflicts = FALSE)
+  })
+
+  # you don't need thse two functions if you're alread using `purrr`
+  # but `purrr` is a heavyweight compiled pacakge that introduces
+  # many other "tidyverse" dependencies and this doesnt.
+
+  capture_error <- function(code, otherwise = NULL, quiet = TRUE) {
+    tryCatch(
+      list(result = code, error = NULL),
+      error = function(e) {
+        if (!quiet)
+          message("Error: ", e$message)
+
+        list(result = otherwise, error = e)
+      },
+      interrupt = function(e) {
+        stop("Terminated by user", call. = FALSE)
+      }
+    )
+  }
+
+  safely <- function(.f, otherwise = NULL, quiet = TRUE) {
+    function(...) capture_error(.f(...), otherwise, quiet)
+  }
+
+  sHEAD <- safely(httr::HEAD)
+  sGET <- safely(httr::GET)
+
+  # Try HEAD first since it's lightweight
+  res <- sHEAD(x, ...)
+
+  if (is.null(res$result) ||
+      ((httr::status_code(res$result) %/% 200) != 1)) {
+
+    res <- sGET(x, ...)
+
+    if (is.null(res$result)) return(NA) # or whatever you want to return on "hard" errors
+
+    if (((httr::status_code(res$result) %/% 200) != 1)) {
+      if (!quiet) warning(sprintf("Requests for [%s] responded but without an HTTP status code in the 200-299 range", x))
+      return(non_2xx_return_value)
+    }
+
+    return(TRUE)
+
+  } else {
+    return(TRUE)
+  }
+
+}
+
+
+
 #' Build the link to the monthly file of NEWAVE model CCEE deck of prices.
 #'
 #' @param YYYYMM character vector with year (YYYY) and month (MM). Accepted
@@ -5,9 +72,10 @@
 #' "2018-04-01", "2018/05".
 #'
 #' @return A character string naming the URL of the zip file to be downloaded.
-#' @examples
-#' yyyymm = c("201809", "2018", "2018.02", "2018-03", "2018-04-01", "2018/05")
-#' nw_urls(yyyymm)
+#' @keywords internal
+# examples
+# yyyymm = c("201809", "2018", "2018.02", "2018-03", "2018-04-01", "2018/05")
+# nw_urls(yyyymm)
 nw_urls <- function(YYYYMM = "201809"){
 
   YYYYMM <- as.character(YYYYMM)
@@ -29,6 +97,7 @@ nw_urls <- function(YYYYMM = "201809"){
 }
 
 #' Get the file path to CONFHD.DAT
+#' @keywords internal
 path_confhd_file <- function(path) {
   grep("CONFHD.DAT",
        fs::dir_ls(path),
@@ -43,13 +112,16 @@ path_confhd_file <- function(path) {
 #' @param confhd_path logical. Default: TRUE, will return the path
 #' to `CONFHD.DAT` file, otherwise the path to the temporary directory of
 #' extracted data.
+#' @keywords internal
 #'
 #'@return Default is the path to `CONFHD.DAT` file, otherwise the
 #'temporary directory of extracted data.
-nw_down <- function(link, confhd_path = TRUE){
+nw_down <- function(link, confhd_path = TRUE, quiet = TRUE){
   #link = "https://www.ccee.org.br/ccee/documentos/NW201809"
+  # link = "https://www.ccee.org.br/ccee/documentos/NW201206"
   checkmate::assert_true(curl::has_internet())
   #checkmate::assert_true(RCurl::url.exists(link))
+  checkmate::assert_true(url_exists(link, quiet = quiet))
   zip_dest <- fs::file_temp(ext = "zip")
   download.file(link, destfile = zip_dest)
   #unzip(zip_dest, list = TRUE)
@@ -65,8 +137,6 @@ nw_down <- function(link, confhd_path = TRUE){
 
   dir_ext
 }
-
-
 
 #' Read data from text file `CONFHD.DAT`
 #'
@@ -116,6 +186,9 @@ read_confhd <- function(confhd_file) {
   if("ree" %in% names(confhd_data)){
     confhd_data <- dplyr::mutate(confhd_data, ree = as.integer(ree))
   }
+  if("ssis" %in% names(confhd_data)){
+    confhd_data <- dplyr::mutate(confhd_data, ssis = as.integer(ssis))
+  }
   confhd_data
 }
 
@@ -134,7 +207,4 @@ confhd_data <- function(YYYYMM, confhd_path = TRUE){
 }
 # PAREI AQUI
 #data_confhd <- read_confhd(confhd_file)
-
-
-
 
