@@ -105,7 +105,7 @@ read_confhd <- function(confhd_file) {
   confhd_data <- dplyr::mutate(confhd_data,
                                num = as.integer(num),
                                posto = as.integer(posto),
-                               jus = as.integer(posto),
+                               jus = as.integer(jus),
                                ree = as.integer(ree),
                                v_inic = as.numeric(v_inic),
                                modif = as.integer(modif),
