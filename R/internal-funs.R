@@ -7,7 +7,12 @@ utils::globalVariables(
     "ree",
     "ssis",
     "unzip",
-    "v_inic"
+    "v_inic",
+    "qnat_posto",
+    "info_posto",
+    "codONS",
+    "info",
+    "nome"
     )
   )
 
