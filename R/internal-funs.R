@@ -26,3 +26,4 @@ utils::globalVariables(
   dplyr::if_else(stringr::str_detect(x, "-[9]{1,}"), NA_character_, x)
 }
 
+extract_numeric <-function(x)as.numeric(gsub("[^0-9.-]+", "", as.character(x)))
