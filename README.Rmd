@@ -20,9 +20,17 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/lhmet/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet/HEgis?branch=master)
 <!-- badges: end -->
 
-The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project.
+The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project. The
+main functions of are:
 
-So far now `import_bhs_ons()` is the only function.
+- `import_bhs_ons()`: use it to import the shapefile with basins of major 
+hydroelectric power dams.
+
+- `info_station()`: it is useful to get basic information from a ONS station.
+
+- `extract_poly()`: to extract a specific watershed polygon from the data set.
+
+
 
 ## Installation
 
@@ -35,20 +43,28 @@ install_github("lhmet/HEgis")
 
 <!-- BEFORE RUN (RE)INSTALL THE PACKAGE -->
 
-## Example
+We load the required packages using:
 
-A shapefile with the watersheds of major Hydroelectric Power plants from ONS is available with `{HEgis}` package.
-
-```{r example}
+```{r}
 library(sf)
 library(spData)
-library()
 library(HEgis)
+```
+
+
+## Watersheds
+
+A shapefile with the watersheds of major Hydroelectric Power plants from ONS is 
+available with `{HEgis}` package automatically after you install it. The path 
+to the compacted file is obtained with the code below:
+
+```{r example}
 bhs_rar <- system.file(
   "extdata",
   "BaciasHidrograficasONS_JUNTOS.rar",
   package = "HEgis"
 )
+bhs_rar
 ```
 
 We need to extract the `rar` file to import the shapefile. We can do this with `lhmetools::urar()`.
@@ -56,7 +72,10 @@ We need to extract the `rar` file to import the shapefile. We can do this with `
 ```{r unrar}
 if (requireNamespace("lhmetools", quietly = TRUE)) {
   library(lhmetools)
-  (shps <- unrar(bhs_rar, dest_dir = tempdir()))
+  wherextract <- tempdir() 
+  # alternatively you can save in the same path as the compacted file
+  #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
+  (shps <- unrar(bhs_rar, dest_dir = wherextract))
 }
 ```
 
@@ -69,9 +88,8 @@ Now we select the shapefile of interest and then import it.
 
 ```{r}
 bhs_pols <- import_bhs_ons(bhs_shp, quiet = TRUE)
-st_crs(bhs_pols) <- "+proj=longlat +datum=WGS84"
-class(bhs_pols)
-st_geometry_type(bhs_pols, FALSE)
+st_crs(bhs_pols) <- 4674
+bhs_pols
 ```
 
 We can view the major watersheds (`r nrow(bhs_pols)`) with:
@@ -103,7 +121,7 @@ for (i in ord_areas) {
 
 ```
 
-Principais UHEs do Rio Paraná.
+Majors HPPs from Paraná River can be selected with:
 
 ```{r}
 library(tidyverse)
@@ -137,6 +155,20 @@ for (i in oa_pr) {
 }
 ```
 
+## Extraction from a specific watershed polygon
+
+To extract a watershed polygon we first need the 'station id' (posto). We can get this information with the function `info_station()`, for example for the HPP station of **G.B. MUNHOZ** we can use the following code:
+
+```{r}
+info_posto <- info_station(name_regex = "MUNHOZ")
+info_posto
+```
+We now use the 'station id' (posto) to select the polygon of interest.
+
+```{r}
+(poly_posto <- extract_poly(station = info_posto$posto))
+(area_poly_posto <- poly_posto[["adkm2"]])
+```
 
 
 
