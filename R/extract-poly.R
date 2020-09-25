@@ -45,9 +45,22 @@ info_posto_sel <- function(info, nome_posto){
   data_posto_file
 }
 
-# Função para gerar arquivo RDS com poligono do posto --------------------------
+#-----------------------------------------------------------------------------
+#' Extract the watershed polygon from a ONS station
+#'
+#' @param station scalar integer, the station id ('posto')
+#' @param save logical, default is FALSE
+#' @param prefix character, prefix to include in the name of RDS file. An
+#'  example is 'poligono-posto-'. The station id will be appended to
+#'  this prefix followed by '.RDS'.
+#' @param dest_dir character, path to save the RDS file. Default is 'output'.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 extract_poly <- function(
-  info = info_station(),
+  station = info_station()[["posto"]],
   save = FALSE,
   prefix = "poligono-posto-",
   dest_dir = "output") {
@@ -55,6 +68,7 @@ extract_poly <- function(
   #checkmate::assert_true(exists("info"))
   # Obter poligonos das UHEs
   # HEgis should be installed to have acces to gis data
+  checkmate::assert_count(station)
   checkmate::assert_true(requireNamespace("HEgis", quietly = TRUE))
   checkmate::assert_true(requireNamespace("lhmetools", quietly = TRUE))
 
@@ -66,12 +80,12 @@ extract_poly <- function(
 
   # if folder already exists just read shape
   path2extractedfiles <- fs::path_ext_remove(bhs_rar)
-  if(dir.exists(path_shp)){
+  if(dir.exists(path2extractedfiles)){
     path_shp <- fs::dir_ls(path2extractedfiles, regexp = "UHEsONS\\.shp$")
-    bhs_pols <- HEgis::import_bhs_ons(path_shp)
+    bhs_pols <- HEgis::import_bhs_ons(path_shp, quiet = TRUE)
   } else {
     # lhmetools to unrar
-    shps <- unrar(bhs_rar, overwrite = TRUE)
+    shps <- lhmetools::unrar(bhs_rar, overwrite = TRUE)
     bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))]
     bhs_pols <- HEgis::import_bhs_ons(bhs_shp, quiet = TRUE)
   }
@@ -79,7 +93,8 @@ extract_poly <- function(
   # G.B. MUNHOZ é FOZ DO AREIA !!!
   # filter(bhs_pols, nomeOri == "UHE Governador Bento Munhoz da Rocha Neto")
 
-  poly_posto <- dplyr::filter(bhs_pols, codONS == info$posto)
+  #poly_posto <- dplyr::filter(bhs_pols, codONS == info$posto)
+  poly_posto <- dplyr::filter(bhs_pols, codONS == station)
   message("The data is not projected. We are taking CRS as SIRGAS 2000 (EPSG: 4674), the same as that of BHO-ANA on which the provider was based.")
   poly_posto <- sf::st_set_crs(poly_posto, 4674)
 
