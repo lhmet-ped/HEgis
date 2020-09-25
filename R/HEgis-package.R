@@ -8,6 +8,12 @@
 #' \itemize{
 #'    \code{\link{import_bhs_ons}}: a convenience function to import the
 #'    shapefile with basins of major hydroelectric power dams.
+#'
+#'    \code{\link{info_station}}: it is useful to get basic
+#'    information from a ONS station.
+#'
+#'    \code{\link{extract_poly}}: to extract a specific watershed polygon from
+#'    data set.
 #' }
 #'
 #'
