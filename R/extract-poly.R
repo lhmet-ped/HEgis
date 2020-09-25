@@ -1,13 +1,13 @@
-
-
 #' Get basic info of ONS station
 #'
 #' @param name_regex a string or regex to search for the name of the ONS station
 #'
 #' @return  a \code{\link[tibble]{tibble}}
 #' @export
-#' @example
-#' info_station("MUNHOZ")
+#' @examples
+#' if(FALSE){
+#'  info_station("MUNHOZ")
+#' }
 info_station <- function(name_regex = "MUNHOZ"){
 
   info_uhes <- HEgis::confhd_data(format.Date(Sys.Date(), "%Y%m"))
@@ -55,10 +55,10 @@ info_posto_sel <- function(info, nome_posto){
 #'  this prefix followed by '.RDS'.
 #' @param dest_dir character, path to save the RDS file. Default is 'output'.
 #'
-#' @return
+#' @return object of class \code{\link[sf]{sf}}.
 #' @export
 #'
-#' @examples
+
 extract_poly <- function(
   station = info_station()[["posto"]],
   save = FALSE,
@@ -69,6 +69,7 @@ extract_poly <- function(
   # Obter poligonos das UHEs
   # HEgis should be installed to have acces to gis data
   checkmate::assert_count(station)
+  station <- as.character(station)
   checkmate::assert_true(requireNamespace("HEgis", quietly = TRUE))
   checkmate::assert_true(requireNamespace("lhmetools", quietly = TRUE))
 
@@ -89,12 +90,13 @@ extract_poly <- function(
     bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))]
     bhs_pols <- HEgis::import_bhs_ons(bhs_shp, quiet = TRUE)
   }
-
+  #checkmate::assert_subset('74', bhs_pols[["codONS"]])
+  checkmate::assert_subset(station, bhs_pols[["codONS"]])
   # G.B. MUNHOZ é FOZ DO AREIA !!!
   # filter(bhs_pols, nomeOri == "UHE Governador Bento Munhoz da Rocha Neto")
 
   #poly_posto <- dplyr::filter(bhs_pols, codONS == info$posto)
-  poly_posto <- dplyr::filter(bhs_pols, codONS == station)
+  poly_posto <- dplyr::filter(bhs_pols, codONS %in% station)
   message("The data is not projected. We are taking CRS as SIRGAS 2000 (EPSG: 4674), the same as that of BHO-ANA on which the provider was based.")
   poly_posto <- sf::st_set_crs(poly_posto, 4674)
 
