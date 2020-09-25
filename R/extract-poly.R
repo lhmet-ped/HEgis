@@ -72,7 +72,7 @@ extract_poly <- function(
   # HEgis should be installed to have acces to gis data
   #checkmate::assert_count(station)
   station <- as.character(station)
-  checkmate::assert_true(!is.na(extract_numeric(station)))
+  checkmate::assert_true(all(!is.na(extract_numeric(station))))
   checkmate::assert_true(requireNamespace("HEgis", quietly = TRUE))
   checkmate::assert_true(requireNamespace("lhmetools", quietly = TRUE))
 
