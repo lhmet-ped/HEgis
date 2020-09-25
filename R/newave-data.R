@@ -192,8 +192,8 @@ read_confhd <- function(confhd_file) {
 #'
 #' @inheritParams nw_urls
 #' @inheritParams nw_down
-#' @details Data is available in \url{https://www.ccee.org.br/ccee/documentos}
-#' after '201206'.
+#' @details Data are available in \url{https://www.ccee.org.br/ccee/documentos}
+#' since July/2012.
 #' @return a [tibble][tibble::tibble-package] with tidy data.
 #' @export
 #'
