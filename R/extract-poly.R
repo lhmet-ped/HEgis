@@ -1,3 +1,5 @@
+
+
 #' Get basic info of ONS station
 #'
 #' @param name_regex a string or regex to search for the name of the ONS station
@@ -68,8 +70,9 @@ extract_poly <- function(
   #checkmate::assert_true(exists("info"))
   # Obter poligonos das UHEs
   # HEgis should be installed to have acces to gis data
-  checkmate::assert_count(station)
+  #checkmate::assert_count(station)
   station <- as.character(station)
+  checkmate::assert_true(!is.na(extract_numeric(station)))
   checkmate::assert_true(requireNamespace("HEgis", quietly = TRUE))
   checkmate::assert_true(requireNamespace("lhmetools", quietly = TRUE))
 
