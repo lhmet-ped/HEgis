@@ -1,3 +1,5 @@
+
+
 #' Get basic info of ONS station
 #'
 #' @param name_regex a string or regex to search for the name of the ONS station
@@ -22,13 +24,31 @@ info_station <- function(name_regex = "MUNHOZ"){
   info
 }
 
+info_posto_sel <- function(info, nome_posto){
+  info %>%
+    dplyr::filter(nome == nome_posto)
+}
 
 
+#-----------------------------------------------------------------------------
+# Save data from a ONS station in a RDS file
+.save_data <- function(data_posto = qnat_posto,
+                      .prefix = "qnat-obs-posto-",
+                      .posto_id = info_posto$posto[1],
+                      .dest_dir = "output"){
+
+  data_posto_file <- paste0(.prefix, .posto_id, ".RDS")
+  data_posto_file <- file.path(.dest_dir, data_posto_file)
+
+  saveRDS(data_posto, file = data_posto_file)
+  checkmate::assert_file_exists(data_posto_file)
+  data_posto_file
+}
 
 # Função para gerar arquivo RDS com poligono do posto --------------------------
-extract_poly_posto <- function(
+extract_poly <- function(
   info = info_station(),
-  save = TRUE,
+  save = FALSE,
   prefix = "poligono-posto-",
   dest_dir = "output") {
 
@@ -64,7 +84,7 @@ extract_poly_posto <- function(
   poly_posto <- sf::st_set_crs(poly_posto, 4674)
 
   if (save) {
-    save_data(
+    .save_data(
       data_posto = poly_posto,
       .prefix = prefix,
       .posto_id = info$posto[1],
