@@ -30,8 +30,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' if (interactive()) {
+#' if (FALSE) {
 #'   bhs_rar <- system.file(
 #'     "extdata",
 #'     "BaciasHidrograficasONS_JUNTOS.rar",
@@ -42,7 +41,6 @@
 #'     bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))]
 #'     bhs_pols <- import_bhs_ons(bhs_shp)
 #'   }
-#' }
 #' }
 import_bhs_ons <- function(shape_file, quiet = FALSE) {
 
