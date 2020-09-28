@@ -121,7 +121,8 @@ extract_poly <- function(
 #' Sets appropriate CRS to station's polygon and apply buffer.
 #'
 #' @param poly_station a polygon of class \code{\link[sf]{sf}}
-#' @param dis.buf numeric, default: 0.25 (degrees)
+#' @param dis.buf numeric, default: 0.25 (degrees). When `dis.buf = 0`,
+#' the output polygon has only be converted the reprojected to `ref_crs`.
 #'
 #' @return object of class \code{\link[sf]{sf}}
 #' @export
@@ -130,10 +131,15 @@ prep_poly_posto <- function(poly_station,
                             dis.buf = 0.25,#res(b_prec)[1]
                             ref_crs = "+proj=longlat +datum=WGS84"
 ) {
-  #checkmate::assert_file_exists(poly_posto_file)
+
+  checkmate::assert_class(poly_station, c("sf", "data.frame"))
+  checkmate::assert_number(dis.buf)
+  checkmate::assert_character(ref_crs)
+
   #poly_posto <- readRDS(poly_posto_file) # %>% st_geometry()
   # conversion to the CRS of meteorological dataset
   poly_posto_ll <- sf::st_transform(poly_station, ref_crs)
+  if(dis.buf == 0) return(poly_posto_ll)
   # st_crs(poly_posto)
   # buffer of res(b_prec)[1]
   poly_posto_b <- suppressMessages(sf::st_buffer(poly_posto_ll, dist = dis.buf))
