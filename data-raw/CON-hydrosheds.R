@@ -1,0 +1,89 @@
+## code to prepare `DATASET` dataset goes here
+easypackages::libraries(c("HEgis", "sf", "glue", "raster"))
+
+#-------------------------------------------------------------------------------
+# Mosaic BIL files from hydrosheds 'Hydrologically conditioned elevation' - CON
+
+info_posto <- info_station(name_regex = "MUNHOZ")
+info_posto
+poly_posto <- extract_poly(station = info_posto$posto)
+
+file_prefix <- function(file){
+  prefix <- file %>%
+    fs::path_file() %>%
+    fs::path_ext_remove() %>%
+    stringr::str_split("_") %>%
+    unlist()
+  prefix <- prefix[1]
+  prefix
+}
+
+read_bil <- function(zipfile) {
+  # zipfile <- zip_files[3]
+  td <- fs::path_temp()
+  unzip(zipfile, exdir = td, overwrite = TRUE)
+  prefix <- file_prefix(zipfile)
+  # dir(td)
+  bil_file <- list.files(td,
+                         pattern = as.character(glue::glue("{prefix}.*bil$")),
+                         full.names = TRUE
+  )
+  # class(bil_file)
+  r <- raster::raster(bil_file)
+  # fs::dir_delete(td)
+  return(r)
+}
+
+
+
+mosaic_rasters <- function(
+  tiles_dir = "/home/hidrometeorologista/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_zip_bil",
+  dest_dir = "../fusepoc-prep/output") {
+  #path_zips_condem_hs
+
+  zip_files <- fs::dir_ls(tiles_dir, regex = "zip$")
+  #zip_files <- zip_files[1:2]
+  #read_bil(zipfile)
+  # zip_files <- zip_files[c(5, 6, 7)]
+  rasterOptions(tmpdir = "~/temp", progress = "text")
+  raster_list <- lapply(zip_files,
+                        function(ifile) {
+                          cat(ifile, "\n")
+                          read_bil(ifile)
+                        }
+  )
+  # raster::merge doesn't work with a named list
+  names(raster_list) <- NULL
+  gc()
+
+  # saveRDS(raster_list, file = "../fusepoc-prep/output/raster_list.RDS")
+  # raster_list <- readRDS("../fusepoc-prep/output/raster_list.RDS")
+
+  # raster_list <- raster_list[1:5]
+  raster_mosaico <- do.call(raster::merge, raster_list)
+  #mosaic_all <- Reduce(function(...) mosaic(..., fun = mean), raster_list)
+  class(raster_mosaico)
+
+  out_file <- fs::path(dest_dir, "sa_con_3s_hydrosheds.grd")
+  #filename(raster_mosaico) <- out_file
+
+  writeRaster(
+    raster_mosaico,
+    filename = out_file,
+    datatype='INT2U'
+  )
+  checkmate::assert_file_exists(out_file)
+
+  out_file
+}
+
+#mosaic_rasters()
+
+
+
+#------------------------------------------------------------------------------
+#
+extract_condem <- function(condem, poly_station){
+ condem <- raster("../fusepoc-prep/output/sa_con_3s_hydrosheds.grd")
+
+}
