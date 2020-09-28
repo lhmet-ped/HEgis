@@ -35,17 +35,34 @@ read_bil <- function(zipfile) {
 }
 
 
+.set_temp_dir <- function(){
+  if(HEobs:::.check_user()){
+    rasterOptions(tmpdir = "~/temp", progress = "text")
+    message("Setting directory to store temporary files in ", tmpDir())
+  }
+}
+
+.ask_check_space <- function(){
+  message(
+    "This operation requires around 11 Gb of your disk space in the form of temporary files."
+  )
+  ans <- readline(" Do you want to proceed? Type 'Yes' (Y) or 'No' (N).")
+  checkmate::assert_subset(ans, c("", "Yes", "yes", "Y"))
+}
 
 mosaic_rasters <- function(
-  tiles_dir = "/home/hidrometeorologista/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_zip_bil",
-  dest_dir = "../fusepoc-prep/output") {
+  tiles_dir = "~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_zip_bil",
+  dest_dir = fs::path_dir(tiles_dir)) {
   #path_zips_condem_hs
 
   zip_files <- fs::dir_ls(tiles_dir, regex = "zip$")
   #zip_files <- zip_files[1:2]
   #read_bil(zipfile)
   # zip_files <- zip_files[c(5, 6, 7)]
-  rasterOptions(tmpdir = "~/temp", progress = "text")
+
+  .ask_check_space()
+  .set_temp_dir()
+
   raster_list <- lapply(zip_files,
                         function(ifile) {
                           cat(ifile, "\n")
@@ -62,18 +79,18 @@ mosaic_rasters <- function(
   # raster_list <- raster_list[1:5]
   raster_mosaico <- do.call(raster::merge, raster_list)
   #mosaic_all <- Reduce(function(...) mosaic(..., fun = mean), raster_list)
-  class(raster_mosaico)
+  #class(raster_mosaico)
 
   out_file <- fs::path(dest_dir, "sa_con_3s_hydrosheds.grd")
   #filename(raster_mosaico) <- out_file
 
-  writeRaster(
+  raser::writeRaster(
     raster_mosaico,
     filename = out_file,
     datatype='INT2U'
   )
   checkmate::assert_file_exists(out_file)
-
+  fs::file_delete(fs::dir_ls("~/temp"))
   out_file
 }
 
@@ -83,7 +100,18 @@ mosaic_rasters <- function(
 
 #------------------------------------------------------------------------------
 #
-extract_condem <- function(condem, poly_station){
- condem <- raster("../fusepoc-prep/output/sa_con_3s_hydrosheds.grd")
-
+extract_condem <- function(
+  condem = raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
+  poly_station = poly_posto,
+  dis.buf = 0
+){
+  poly_posto_buf <- prep_poly_posto(
+    poly_station,
+    ref_crs = projection(condem),
+    dis.buf
+  )
+ condem_cm <- raster::mask(raster::crop(condem, poly_posto_buf), poly_posto_buf)
+ #plot(condem_c)
+ #plot(st_geometry(poly_posto), add = TRUE, border = "black", col = "transparent")
+condem_cm
 }
