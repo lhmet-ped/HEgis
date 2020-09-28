@@ -33,8 +33,7 @@ file (e.g. \code{BaciasHidrograficasONS_JUNTOS.shp}). It will be extended to
 the files in \code{BaciasHidrograficasONS_SEPARADO.rar}.
 }
 \examples{
-\dontrun{
-if (interactive()) {
+if (FALSE) {
   bhs_rar <- system.file(
     "extdata",
     "BaciasHidrograficasONS_JUNTOS.rar",
@@ -45,7 +44,6 @@ if (interactive()) {
     bhs_shp <- shps[grep("Bacias.*\\\\.shp$", fs::path_file(shps))]
     bhs_pols <- import_bhs_ons(bhs_shp)
   }
-}
 }
 }
 \author{
