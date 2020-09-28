@@ -1,5 +1,4 @@
-
-
+#-------------------------------------------------------------------------------
 #' Get basic info of ONS station
 #'
 #' @param name_regex a string or regex to search for the name of the ONS station
@@ -114,3 +113,32 @@ extract_poly <- function(
 
   poly_posto
 }
+
+#-------------------------------------------------------------------------------
+#' Prepares the station's polygon to determine the spatial average of a
+#' meterological variable.
+#'
+#' Sets appropriate CRS to station's polygon and apply buffer.
+#'
+#' @param poly_station a polygon of class \code{\link[sf]{sf}}
+#' @param dis.buf numeric, default: 0.25 (degrees)
+#'
+#' @return object of class \code{\link[sf]{sf}}
+#' @export
+#'
+prep_poly_posto <- function(poly_station,
+                            dis.buf = 0.25,#res(b_prec)[1]
+                            ref_crs = "+proj=longlat +datum=WGS84"
+) {
+  #checkmate::assert_file_exists(poly_posto_file)
+  #poly_posto <- readRDS(poly_posto_file) # %>% st_geometry()
+  # conversion to the CRS of meteorological dataset
+  poly_posto_ll <- sf::st_transform(poly_station, ref_crs)
+  # st_crs(poly_posto)
+  # buffer of res(b_prec)[1]
+  poly_posto_b <- suppressMessages(sf::st_buffer(poly_posto_ll, dist = dis.buf))
+  poly_posto_b
+}
+
+
+
