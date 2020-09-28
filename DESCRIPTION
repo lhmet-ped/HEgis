@@ -27,7 +27,8 @@ Imports:
     fs,
     glue,
     janitor,
-    lubridate
+    lubridate,
+    raster
 Suggests: 
     spelling,
     testthat,
