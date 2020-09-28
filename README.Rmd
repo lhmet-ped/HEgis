@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Codecov test coverage](https://codecov.io/gh/lhmet/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet/HEgis?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master)
 <!-- badges: end -->
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project. The
@@ -29,6 +29,10 @@ hydroelectric power dams.
 - `info_station()`: it is useful to get basic information from a ONS station.
 
 - `extract_poly()`: to extract a specific watershed polygon from the data set.
+
+- `extract_condem()`: to crop and mask a geographic subset of the hydrologically 
+conditioned elevation model from Hydrosheds.
+
 
 
 
@@ -49,6 +53,7 @@ We load the required packages using:
 library(sf)
 library(spData)
 library(HEgis)
+library(raster)
 ```
 
 
@@ -121,9 +126,10 @@ for (i in ord_areas) {
 
 ```
 
-Majors HPPs from Paraná River can be selected with:
 
-```{r}
+
+```{r, include = FALSE}
+#Majors HPPs from Paraná River can be selected with:
 library(tidyverse)
 #sort(bhs_pols$nome)
 bhs_pr <- filter(bhs_pols, nome %in% 
@@ -133,7 +139,7 @@ bhs_pr
 ```
 
 
-```{r, fig.align='center', fig.asp = 1}
+```{r, fig.align='center', fig.asp = 1, include = FALSE}
 set.seed(6)
 oa_pr <- order(bhs_pr$adkm2, decreasing = TRUE)
 cols <- sample(colors(), size = nrow(bhs_pr))
@@ -237,5 +243,17 @@ plot(st_geometry(bhs_pols)[i],
      col = 1
      )  
 }
+```
+
+## Conditioned elevation model for a watershed polygon
+
+```{r}
+r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
+condem_posto <- extract_condem(
+  condem = r,
+  poly_station = poly_posto,
+  dis.buf = 0
+)
+plot(condem_posto)
 ```
 

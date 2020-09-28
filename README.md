@@ -8,7 +8,7 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Codecov test
-coverage](https://codecov.io/gh/lhmet/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet/HEgis?branch=master)
+coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master)
 <!-- badges: end -->
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R\&D
@@ -22,6 +22,9 @@ project. The main functions of are:
 
   - `extract_poly()`: to extract a specific watershed polygon from the
     data set.
+
+  - `extract_condem()`: to crop and mask a geographic subset of the
+    hydrologically conditioned elevation model from Hydrosheds.
 
 ## Installation
 
@@ -45,6 +48,8 @@ library(spData)
 #> package with: `install.packages('spDataLarge',
 #> repos='https://nowosad.github.io/drat/', type='source')`
 library(HEgis)
+library(raster)
+#> Loading required package: sp
 ```
 
 ## Watersheds
@@ -74,21 +79,21 @@ if (requireNamespace("lhmetools", quietly = TRUE)) {
   #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
   (shps <- unrar(bhs_rar, dest_dir = wherextract))
 }
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/RtmpZFp49Z/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r
@@ -155,71 +160,9 @@ for (i in ord_areas) {
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" />
 
-Majors HPPs from Paraná River can be selected with:
-
-``` r
-library(tidyverse)
-#> ── Attaching packages ────────────────────────────────── tidyverse 1.3.0 ──
-#> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-#> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
-#> ✓ tidyr   1.1.2     ✓ stringr 1.4.0
-#> ✓ readr   1.3.1     ✓ forcats 0.5.0
-#> ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-#> x dplyr::filter() masks stats::filter()
-#> x dplyr::lag()    masks stats::lag()
-#sort(bhs_pols$nome)
-bhs_pr <- filter(bhs_pols, nome %in% 
-         c("ITAIPU", "P_PRIMAVERA", "JUPIA", "A_VERMELHA", "BARRA_BONITA", "FURNAS")
-       )
-bhs_pr
-#> Simple feature collection with 6 features and 9 fields
-#> geometry type:  POLYGON
-#> dimension:      XY
-#> bbox:           xmin: -55.94828 ymin: -25.65613 xmax: -43.58262 ymax: -15.45577
-#> geographic CRS: SIRGAS 2000
-#>   codONS codANA         nome             nomeOri     adkm2   volhm3        rio
-#> 1    266  11735       ITAIPU          UHE Itaipu 822904.33 29403.91 Rio Paraná
-#> 2    245   8124        JUPIA           UHE Jupiá 476527.73  3354.00 Rio Paraná
-#> 3     18   8292   A_VERMELHA   UHE Água Vermelha 139154.89 11025.00 Rio Grande
-#> 4    246   7773  P_PRIMAVERA UHE Porto Primavera 571692.41 20001.00       <NA>
-#> 5      6   3460       FURNAS          UHE Furnas  51942.82 22950.00 Rio Grande
-#> 6    237   7922 BARRA_BONITA    UHE Barra Bonita  32949.15  3160.00  Rio Tietê
-#>    cobacia        tpopera                       geometry
-#> 1  8631311     Fio d'água POLYGON ((-43.60082 -21.168...
-#> 2   865775     Fio d'água POLYGON ((-46.35946 -23.273...
-#> 3 86815373 Regulariza_ONS POLYGON ((-45.64278 -22.846...
-#> 4   865131 Regulariza_ONS POLYGON ((-45.8879 -22.8752...
-#> 5 86879933 Regulariza_ONS POLYGON ((-44.96669 -22.474...
-#> 6 86659193 Regulariza_ONS POLYGON ((-46.04498 -22.929...
-```
-
-``` r
-set.seed(6)
-oa_pr <- order(bhs_pr$adkm2, decreasing = TRUE)
-cols <- sample(colors(), size = nrow(bhs_pr))
-plot(st_geometry(br), 
-     axes = TRUE, 
-     border = "grey60", 
-     lwd = 2
-     #add = TRUE
-     )
-# from highest to lower drainage areas
-for (i in oa_pr) {
-  # i <- ord_areas[1]
-  plot(st_geometry(bhs_pr)[i],
-    add = TRUE,
-    col = cols[i],
-    border = 1,
-    lwd = 0.7
-  )
-}
-```
-
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" />
-
 ## Extraction from a specific watershed polygon
 
-To extract a watershed polygon we first need the ‘station id’ (posto).
+To extract a watershed polygon we first need the "station id" (posto).
 We can get this information with the function `info_station()`, for
 example for the HPP station of **G.B. MUNHOZ** we can use the following
 code:
@@ -233,7 +176,7 @@ info_posto
 #> 1    74 G.B. MUNHOZ    74    76    11   53.8 EX         0      1931     2018
 ```
 
-We now use the ‘station id’ (posto) to select the polygon of interest.
+We now use the "station id" (posto) to select the polygon of interest.
 
 ``` r
 (poly_posto <- extract_poly(station = info_posto$posto))
@@ -250,3 +193,19 @@ We now use the ‘station id’ (posto) to select the polygon of interest.
 (area_poly_posto <- poly_posto[["adkm2"]])
 #> [1] 30207.57
 ```
+
+## Conditioned elevation model for a watershed polygon
+
+``` r
+r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
+condem_posto <- extract_condem(
+  condem = r,
+  poly_station = poly_posto,
+  dis.buf = 0
+)
+#> Warning in if (class(poly_station) == "Extent") {: the condition has length > 1
+#> and only the first element will be used
+plot(condem_posto)
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
