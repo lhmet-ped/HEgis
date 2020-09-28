@@ -13,7 +13,10 @@
 #'    information from a ONS station.
 #'
 #'    \code{\link{extract_poly}}: to extract a specific watershed polygon from
-#'    data set.
+#'    the data set with all watersheds.
+#'
+#'    \code{\link{extract_condem}}: to crop and mask a geographic subset of
+#'    the hydrologically conditioned elevation model from Hydrosheds.
 #' }
 #'
 #'
@@ -24,4 +27,4 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 ## usethis namespace: end
-"_PACKAGE"
+NULL

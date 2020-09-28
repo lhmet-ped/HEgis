@@ -157,13 +157,13 @@ for (i in oa_pr) {
 
 ## Extraction from a specific watershed polygon
 
-To extract a watershed polygon we first need the 'station id' (posto). We can get this information with the function `info_station()`, for example for the HPP station of **G.B. MUNHOZ** we can use the following code:
+To extract a watershed polygon we first need the \"station id\" (posto). We can get this information with the function `info_station()`, for example for the HPP station of **G.B. MUNHOZ** we can use the following code:
 
 ```{r}
 info_posto <- info_station(name_regex = "MUNHOZ")
 info_posto
 ```
-We now use the 'station id' (posto) to select the polygon of interest.
+We now use the \"station id\" (posto) to select the polygon of interest.
 
 ```{r}
 (poly_posto <- extract_poly(station = info_posto$posto))

@@ -3,7 +3,6 @@
 \docType{package}
 \name{HEgis}
 \alias{HEgis}
-\alias{HEgis-package}
 \title{HEgis: Functions To Import GIS Data Needed For The HYDROENGIE Project}
 \description{
 The goal of \pkg{HEgis} is to prepare GIS data for use in HydroEngie R&D
@@ -20,19 +19,10 @@ shapefile with basins of major hydroelectric power dams.
 information from a ONS station.
 
 \code{\link{extract_poly}}: to extract a specific watershed polygon from
-data set.
+the data set with all watersheds.
+
+\code{\link{extract_condem}}: to crop and mask a geographic subset of
+the hydrologically conditioned elevation model from Hydrosheds.
 }
 }
 
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://github.com/lhmet/HEgis}
-  \item Report bugs at \url{https://github.com/lhmet/HEgis/issues}
-}
-
-}
-\author{
-\strong{Maintainer}: Jônatan Tatsch \email{lhmet@ufsm.br}
-
-}

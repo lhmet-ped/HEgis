@@ -121,8 +121,11 @@ extract_poly <- function(
 #' Sets appropriate CRS to station's polygon and apply buffer.
 #'
 #' @param poly_station a polygon of class \code{\link[sf]{sf}}
+#' @param ref_crs character, the base coordinate reference system. Default:
+#' '+proj=longlat +datum=WGS84'.
 #' @param dis.buf numeric, default: 0.25 (degrees). When `dis.buf = 0`,
-#' the output polygon has only be converted the reprojected to `ref_crs`.
+#' the only action over the `poly_station` is the conversion of coordinates to
+#'  `ref_crs`.
 #'
 #' @return object of class \code{\link[sf]{sf}}
 #' @export
@@ -152,13 +155,18 @@ prep_poly_posto <- function(poly_station,
 #' @description Extract (crop and mask) a geographic subset of a Raster object.
 #' @param condem character, path file of hydrologically conditioned elevation
 #'  model (CON) from Hydrosheds data set.
-#'  Default: raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
+#'  Default: raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd").
 #' @param poly_station a sf polygon or a raster extent, Default: extract_poly(station = 74).
 #' @param dis.buf scalar numeric.
 #' @return Raster object.
 #' @details This function was created with the intention of use to create the
 #' input NETCDF file for the FUSE model, `elevation_bands.nc`. The function for
 #' processing of hydrosheds CON raster is available at `data-raw/con-hydrosheds.R`.
+#' The resulting CON raster for South America (sa_con_3s_hydrosheds.gr*,
+#' spatial resolution of ~90 m) can be downloaded
+#' [here](https://www.dropbox.com/sh/1agi2378wckr6c3/AAAu2_IBc_9LWTdzvA52VL-Ja?dl=0).
+#' @note The CON raster file is not distributed with the package due to its
+#' huge size (12.5 GB).
 #' @examples
 #' \dontrun{
 #' if(FALSE){
@@ -172,12 +180,13 @@ prep_poly_posto <- function(poly_station,
 #' }
 #' }
 #' @seealso
-#'  \code{\link[raster]{mask}},\code{\link[raster]{c("crop", "crop")}}
+#'  \code{\link[HEgis]{prep_poly_posto}},
+#'  \code{\link[raster]{mask}},\code{\link[raster]{crop}}
 #' @export
 #' @importFrom raster mask crop
 extract_condem <- function(
-  condem = raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
-  poly_station = poly_posto,
+  condem = raster::raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
+  poly_station,
   dis.buf = 0
 ){
 
@@ -187,7 +196,7 @@ extract_condem <- function(
 
   poly_posto_buf <- prep_poly_posto(
     poly_station,
-    ref_crs = projection(condem),
+    ref_crs = raster::projection(condem),
     dis.buf
   )
   condem_cm <- raster::mask(raster::crop(condem, poly_posto_buf), poly_posto_buf)
