@@ -28,7 +28,8 @@ Imports:
     glue,
     janitor,
     lubridate,
-    raster
+    raster,
+    tibble
 Suggests: 
     spelling,
     testthat,
