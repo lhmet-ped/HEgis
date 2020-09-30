@@ -145,7 +145,9 @@ prep_poly_posto <- function(poly_station,
   if(dis.buf == 0) return(poly_posto_ll)
   # st_crs(poly_posto)
   # buffer of res(b_prec)[1]
-  poly_posto_b <- suppressMessages(sf::st_buffer(poly_posto_ll, dist = dis.buf))
+  poly_posto_b <- suppressWarnings(
+    sf::st_buffer(poly_posto_ll, dist = dis.buf)
+    )
   poly_posto_b
 }
 
@@ -190,7 +192,8 @@ extract_condem <- function(
   dis.buf = 0
 ){
 
-  if(class(poly_station) == "Extent"){
+
+  if("Extent" %in% class(poly_station)){
     return(raster::crop(condem, poly_station))
   }
 
@@ -204,5 +207,93 @@ extract_condem <- function(
   #plot(st_geometry(poly_posto), add = TRUE, border = "black", col = "transparent")
   condem_cm
 }
+
+
+# r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
+# condem_posto <- extract_condem(
+#   condem = r,
+#   poly_station = poly_posto,
+#   dis.buf = 0
+# )
+
+
+#' Convert output from hist() to tibble
+#' @noRd
+
+.hist2tab <- function(hist.list){
+
+  brks <- hist.list$breaks
+  z_bands <- brks %>%
+    data.frame(inf = ., sup = dplyr::lead(.)) %>%
+    head(-1) %>%
+    dplyr::mutate(mean_elev = hist.list$mids,
+                  count = hist.list$counts,
+                  area_frac = count/sum(count)) %>%
+    tibble::as_tibble()
+  z_bands
+}
+
+#' Fraction of the catchment covered by each Elevation band
+#'
+#' @param z raster or numeric vector
+#' @param dz numeric scalar, interval (m) to elevation bands. Calculates basin
+#'  area distributions within 100 m elevation by default.
+#' @param nbands numeric scalar. Default: NULL (use `dz` to build elevation
+#' bands).
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' if(FALSE){
+#'   poly_posto <- extract_poly(station = 74)
+#   con_posto <- extract_condem(
+#'    raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
+#'    poly_posto,
+#'    dis.buf = 0
+#'  )
+#'   elev_bands(z = con_posto, dz = 100)
+#'   elev_bands(z = con_posto, nbands = 5)
+#' }
+#' }
+elev_bands <- function(z, dz = 100, nbands = NULL){
+  checkmate::assert_number(dz)
+  if(checkmate::test_class(z, "RasterLayer")){
+    z <- raster::values(z, )
+  }
+
+  #z <- values(condem_posto)
+  z <- z[!is.na(z)]
+  zrange <- range(z)
+
+  if(!is.null(nbands)){
+    # nbands = 4
+    checkmate::assert_number(nbands)
+    brks <- seq(zrange[1], zrange[2], length.out = nbands)
+    dist <- hist(x = z, breaks = brks, plot = FALSE)
+    ftab <- .hist2tab(dist)
+    return(ftab)
+  }
+
+
+    checkmate::assert_true(diff(zrange) > dz)
+    brks <- seq(zrange[1], zrange[2], by = dz)
+    if(max(brks) < zrange[2]) brks <- c(brks, brks[length(brks)] + dz)
+    #discrete_dist <- table(cut(z, brks, include.lowest = TRUE))
+    dist <- hist(x = z, breaks = brks, plot = FALSE)
+    ftab <- .hist2tab(dist)
+    ftab <- dplyr::select(band = 1:nrow(), dplyr::everything())
+    ftab
+}
+
+
+
+
+
+
+
+
+
 
 
