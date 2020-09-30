@@ -115,6 +115,7 @@ path_confhd_file <- function(path) {
 nw_down <- function(link, confhd_path = TRUE, quiet = TRUE){
   #link = "https://www.ccee.org.br/ccee/documentos/NW201809"
   # link = "https://www.ccee.org.br/ccee/documentos/NW201206"
+  checkmate::assert_character(link)
   checkmate::assert_true(curl::has_internet())
   #checkmate::assert_true(RCurl::url.exists(link))
   checkmate::assert_true(url_exists(link, quiet = quiet))
