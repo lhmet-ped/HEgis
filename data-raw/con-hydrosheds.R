@@ -1,8 +1,10 @@
-## code to prepare `DATASET` dataset goes here
+## Code to prepare the mosaic of the Hydrologically conditioned elevation model
+## for South America from Hydrosheds. Spatial resolution of ~90 m at equator.
+
 easypackages::libraries(c("HEgis", "sf", "glue", "raster"))
 
 #-------------------------------------------------------------------------------
-# Mosaic BIL files from hydrosheds 'Hydrologically conditioned elevation' - CON
+# Mosaic BIL files from hydrosheds 'Hydrologically conditioned elevation'-CON
 
 info_posto <- info_station(name_regex = "MUNHOZ")
 info_posto
