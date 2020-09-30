@@ -234,6 +234,14 @@ extract_condem <- function(
   z_bands
 }
 
+
+#' Fraction of precipitation by elevation band
+
+#prec_bands <- function(con_dem, prec_raster, z_bands){
+ # con_dem = con_posto; prec_raster = readRDS("")
+#}
+
+
 #' Fraction of the catchment covered by each Elevation band
 #'
 #' @param z raster or numeric vector
