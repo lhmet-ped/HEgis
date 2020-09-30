@@ -87,9 +87,7 @@ extract_condem <- function(
 #' Fraction of the catchment covered by each Elevation band
 #'
 #' @param z raster or numeric vector
-#' @param dz numeric scalar, interval (m) to elevation bands. Calculates basin
-#'  area distributions within 100 m elevation by default.
-#' @param nbands numeric scalar. Default: NULL (use `dz` to build elevation
+#' @inheritParams elev_bands
 #' bands).
 #' @noRd
 #' @family elevation bands functions
@@ -97,11 +95,12 @@ extract_condem <- function(
 z_bands <- function(z, dz = 100, nbands = NULL){
   checkmate::assert_number(dz)
   if(checkmate::test_class(z, "RasterLayer")){
-    z <- raster::values(z, )
+    z <- raster::values(z)
   }
 
   #z <- values(condem74)
   z <- z[!is.na(z)]
+  checkmate::assert_true(length(z) > 0)
   zrange <- range(z)
 
   # elevation bands using based on nbands
@@ -132,7 +131,10 @@ z_bands <- function(z, dz = 100, nbands = NULL){
 #' @param con_dem raster of conditioned elevation of catchment
 #' @param meteo_raster raster of meteorological field (precipitation,
 #' evapotranspiration, ...).
-#' @inheritParams z_bands
+#' @param dz numeric scalar, interval (m) to elevation bands. Calculates basin
+#'  area distributions within 100 m elevation by default.
+#' @param nbands numeric scalar. Default: NULL (use `dz` to build elevation
+#' bands).
 #' @export
 #' @return tibble with fraction of precipitation and elevation covered by
 #' elevation bands
@@ -156,7 +158,7 @@ elev_bands <- function(con_dem, meteo_raster = NULL, dz = 100, nbands = NULL){
     sort()
   rbands <- raster::cut(con_dem, breaks = brks, include.lowest = TRUE)
   # plot(rbands)
-  rasterOptions(progress = "text")
+  raster::rasterOptions(progress = "text")
   prec_res <- raster::resample(meteo_raster, rbands)
   rm(meteo_raster, con_dem)
 

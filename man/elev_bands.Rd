@@ -11,6 +11,12 @@ elev_bands(con_dem, meteo_raster = NULL, dz = 100, nbands = NULL)
 
 \item{meteo_raster}{raster of meteorological field (precipitation,
 evapotranspiration, ...).}
+
+\item{dz}{numeric scalar, interval (m) to elevation bands. Calculates basin
+area distributions within 100 m elevation by default.}
+
+\item{nbands}{numeric scalar. Default: NULL (use \code{dz} to build elevation
+bands).}
 }
 \value{
 tibble with fraction of precipitation and elevation covered by
