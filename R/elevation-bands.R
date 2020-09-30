@@ -91,7 +91,7 @@ extract_condem <- function(
 #'  area distributions within 100 m elevation by default.
 #' @param nbands numeric scalar. Default: NULL (use `dz` to build elevation
 #' bands).
-#' @keywords internal
+#' @noRd
 #' @family elevation bands functions
 #'
 z_bands <- function(z, dz = 100, nbands = NULL){
@@ -100,7 +100,7 @@ z_bands <- function(z, dz = 100, nbands = NULL){
     z <- raster::values(z, )
   }
 
-  #z <- values(con_posto)
+  #z <- values(condem74)
   z <- z[!is.na(z)]
   zrange <- range(z)
 
@@ -108,7 +108,7 @@ z_bands <- function(z, dz = 100, nbands = NULL){
   if(!is.null(nbands)){
     # nbands = 4
     checkmate::assert_number(nbands)
-    brks <- seq(zrange[1], zrange[2], length.out = nbands)
+    brks <- seq(zrange[1], zrange[2], length.out = nbands + 1)
     dist <- hist(x = z, breaks = brks, plot = FALSE)
     ftab <- .hist2tab(dist)
     return(ftab)
@@ -134,6 +134,8 @@ z_bands <- function(z, dz = 100, nbands = NULL){
 #' evapotranspiration, ...).
 #' @inheritParams z_bands
 #' @export
+#' @return tibble with fraction of precipitation and elevation covered by
+#' elevation bands
 #' @examples
 #' \dontrun{
 #'   if(FALSE){
@@ -156,7 +158,7 @@ elev_bands <- function(con_dem, meteo_raster = NULL, dz = 100, nbands = NULL){
   # plot(rbands)
   rasterOptions(progress = "text")
   prec_res <- raster::resample(meteo_raster, rbands)
-  rm(meteo_raster, condem)
+  rm(meteo_raster, con_dem)
 
   # plot(prec_clim_res); plot(st_geometry(poly_station), add = TRUE)
   zone_frac <- raster::zonal(prec_res,

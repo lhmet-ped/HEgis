@@ -72,7 +72,7 @@ bhs_rar <- system.file(
 bhs_rar
 ```
 
-We need to extract the `rar` file to import the shapefile. We can do this with `lhmetools::urar()`.
+We need to extract the `rar` file to import the shapefile. We can do this with `lhmetools::unrar()`.
 
 ```{r unrar}
 if (requireNamespace("lhmetools", quietly = TRUE)) {
