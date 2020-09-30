@@ -224,12 +224,13 @@ extract_condem <- function(
 
   brks <- hist.list$breaks
   z_bands <- brks %>%
-    data.frame(inf = ., sup = dplyr::lead(.)) %>%
+    tibble::tibble(inf = ., sup = dplyr::lead(.)) %>%
     head(-1) %>%
-    dplyr::mutate(mean_elev = hist.list$mids,
+    dplyr::mutate(.,
+                  mean_elev = hist.list$mids,
                   count = hist.list$counts,
-                  area_frac = count/sum(count)) %>%
-    tibble::as_tibble()
+                  area_frac = count/sum(count),
+                  band = 1:nrow(.))
   z_bands
 }
 
@@ -247,7 +248,7 @@ extract_condem <- function(
 #' @examples
 #' \dontrun{
 #' if(FALSE){
-#'   poly_posto <- extract_poly(station = 74)
+#'   poly_posto <- suppressMessages(extract_poly(station = 74))
 #   con_posto <- extract_condem(
 #'    raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
 #'    poly_posto,
@@ -263,10 +264,11 @@ elev_bands <- function(z, dz = 100, nbands = NULL){
     z <- raster::values(z, )
   }
 
-  #z <- values(condem_posto)
+  #z <- values(con_posto)
   z <- z[!is.na(z)]
   zrange <- range(z)
 
+  # elevation bands using based on nbands
   if(!is.null(nbands)){
     # nbands = 4
     checkmate::assert_number(nbands)
@@ -276,14 +278,15 @@ elev_bands <- function(z, dz = 100, nbands = NULL){
     return(ftab)
   }
 
-
+  # elevation bands using based on a dz m for each band
+  # (nbands variable between catchments)
     checkmate::assert_true(diff(zrange) > dz)
     brks <- seq(zrange[1], zrange[2], by = dz)
     if(max(brks) < zrange[2]) brks <- c(brks, brks[length(brks)] + dz)
     #discrete_dist <- table(cut(z, brks, include.lowest = TRUE))
     dist <- hist(x = z, breaks = brks, plot = FALSE)
-    ftab <- .hist2tab(dist)
-    ftab <- dplyr::select(band = 1:nrow(), dplyr::everything())
+    ftab <- .hist2tab(dist) %>%
+      dplyr::select(band, dplyr::everything())
     ftab
 }
 
