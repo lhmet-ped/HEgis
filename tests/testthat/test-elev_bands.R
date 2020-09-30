@@ -13,9 +13,7 @@ test_that("Produces the correct output.", {
 
 test_that("Produces the correct errors.", {
   expect_error(elev_bands(condem74, precclim74, dz = 1000))
-  expect_warning(
-   expect_error(elev_bands(rep(NA, ncell(condem74)), precclim74, dz = 100))
-  )
+  expect_error(elev_bands(rep(NA, ncell(condem74)), precclim74, dz = 100))
   expect_error(elev_bands(condem74, precclim74, nbands = NA))
   expect_error(elev_bands(condem74, precclim74, dz = NULL, nbands = NULL))
 })
