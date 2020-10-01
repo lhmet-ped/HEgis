@@ -199,10 +199,12 @@ read_confhd <- function(confhd_file) {
 #' @export
 #'
 #' @examples
+#' if(FALSE){
 #' uhes_info <- confhd_data(format.Date(Sys.Date(), "%Y%m"))
+#' }
+#'
 confhd_data <- function(YYYYMM, confhd_path = TRUE){
   read_confhd(nw_down(nw_urls(YYYYMM), confhd_path))
 }
-# PAREI AQUI
-#data_confhd <- read_confhd(confhd_file)
+
 
