@@ -7,8 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Codecov test
-coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master)
+<!-- [![Codecov test coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master) -->
 <!-- badges: end -->
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R\&D
@@ -26,10 +25,13 @@ project. The main functions of are:
   - `extract_condem()`: to crop and mask a geographic subset of the
     hydrologically conditioned elevation model from Hydrosheds.
 
+  - `elev_bands()`: to get the fractions of precipitation and catchment
+    area by elevation bands
+
 ## Installation
 
-You can install HEgis from [github](https://github.com/lhmet/HEgis)
-with:
+You can install **`{HEgis}`** from
+[github](https://github.com/lhmet/HEgis) with:
 
 ``` r
 library(devtools)
@@ -50,13 +52,26 @@ library(spData)
 library(HEgis)
 library(raster)
 #> Loading required package: sp
+library(lhmetools)
+library(tidyverse)
+#> ── Attaching packages ────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+#> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
+#> ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+#> ✓ readr   1.3.1     ✓ forcats 0.5.0
+#> ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
+#> x tidyr::extract() masks raster::extract()
+#> x dplyr::filter()  masks stats::filter()
+#> x dplyr::lag()     masks stats::lag()
+#> x dplyr::select()  masks raster::select()
 ```
 
 ## Watersheds
 
 A shapefile with the watersheds of major Hydroelectric Power plants from
-ONS is available with `{HEgis}` package automatically after you install
-it. The path to the compacted file is obtained with the code below:
+ONS is available with **`{HEgis}`** package automatically after you
+install it. The path to the compacted file is obtained with the code
+below:
 
 ``` r
 bhs_rar <- system.file(
@@ -69,31 +84,28 @@ bhs_rar
 ```
 
 We need to extract the `rar` file to import the shapefile. We can do
-this with `lhmetools::urar()`.
+this with `lhmetools::unrar()`.
 
 ``` r
-if (requireNamespace("lhmetools", quietly = TRUE)) {
-  library(lhmetools)
-  wherextract <- tempdir() 
-  # alternatively you can save in the same path as the compacted file
-  #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
-  (shps <- unrar(bhs_rar, dest_dir = wherextract))
-}
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+wherextract <- tempdir() 
+# alternatively you can save in the same path as the compacted file
+#wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
+(shps <- unrar(bhs_rar, dest_dir = wherextract))
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/RtmpZVb420/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r
@@ -158,7 +170,7 @@ for (i in ord_areas) {
 }
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="man/figures/README-plot-shape-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## Extraction from a specific watershed polygon
 
@@ -173,7 +185,7 @@ info_posto
 #> # A tibble: 1 x 10
 #>     num nome        posto   jus   ree v_inic u_exis modif inic_hist fim_hist
 #>   <int> <chr>       <int> <int> <int>  <dbl> <chr>  <int>     <int>    <int>
-#> 1    74 G.B. MUNHOZ    74    76    11   53.8 EX         0      1931     2018
+#> 1    74 G.B. MUNHOZ    74    76    11   29.2 EX         0      1931     2018
 ```
 
 We now use the "station id" (posto) to select the polygon of interest.
@@ -196,6 +208,9 @@ We now use the "station id" (posto) to select the polygon of interest.
 
 ## Conditioned elevation model for a watershed polygon
 
+The hydrologically conditioned elevation for the station can be obtained
+with:
+
 ``` r
 r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
 condem_posto <- extract_condem(
@@ -203,9 +218,35 @@ condem_posto <- extract_condem(
   poly_station = poly_posto,
   dis.buf = 0
 )
-#> Warning in if (class(poly_station) == "Extent") {: the condition has length > 1
-#> and only the first element will be used
 plot(condem_posto)
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-condem-1.png" width="100%" />
+
+## Elevation bands of a watershed polygon
+
+**`{HEgis}`** also provides a function to get the fractions of
+precipitation and catchment area by elevation bands.
+
+``` r
+elev_bands(con_dem = condem_posto, 
+           meteo_raster = precclim74, 
+           dz = 100
+           )
+#>   |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+#> 
+#>   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%
+#> # A tibble: 10 x 7
+#>     band   inf   sup mean_elev   count   area_frac   prec_frac
+#>    <dbl> <dbl> <dbl>     <dbl>   <int>       <dbl>       <dbl>
+#>  1     1   588   688       638    1084 0.000276    0.000339   
+#>  2     2   688   788       738  521320 0.133       0.133      
+#>  3     3   788   888       838 1545776 0.394       0.385      
+#>  4     4   888   988       938 1014758 0.259       0.255      
+#>  5     5   988  1088      1038  406154 0.104       0.109      
+#>  6     6  1088  1188      1138  309625 0.0789      0.0841     
+#>  7     7  1188  1288      1238  111320 0.0284      0.0301     
+#>  8     8  1288  1388      1338   12934 0.00330     0.00362    
+#>  9     9  1388  1488      1438     409 0.000104    0.000129   
+#> 10    10  1488  1588      1538       3 0.000000765 0.000000994
+```

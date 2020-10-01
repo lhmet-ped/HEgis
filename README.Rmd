@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Codecov test coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master)
+<!-- [![Codecov test coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master) -->
 <!-- badges: end -->
 
 The goal of HEgis is to prepare GIS data for use in HydroEngie R&D project. The
@@ -33,12 +33,14 @@ hydroelectric power dams.
 - `extract_condem()`: to crop and mask a geographic subset of the hydrologically 
 conditioned elevation model from Hydrosheds.
 
+- `elev_bands()`: to get the fractions of precipitation and catchment area by elevation bands  
+
 
 
 
 ## Installation
 
-You can install HEgis from [github](https://github.com/lhmet/HEgis) with:
+You can install **`{HEgis}`** from [github](https://github.com/lhmet/HEgis) with:
 
 ``` r
 library(devtools)
@@ -49,21 +51,23 @@ install_github("lhmet/HEgis")
 
 We load the required packages using:
 
-```{r}
+```{r load-pcks}
 library(sf)
 library(spData)
 library(HEgis)
 library(raster)
+library(lhmetools)
+library(tidyverse)
 ```
 
 
 ## Watersheds
 
 A shapefile with the watersheds of major Hydroelectric Power plants from ONS is 
-available with `{HEgis}` package automatically after you install it. The path 
+available with **`{HEgis}`** package automatically after you install it. The path 
 to the compacted file is obtained with the code below:
 
-```{r example}
+```{r rar-file}
 bhs_rar <- system.file(
   "extdata",
   "BaciasHidrograficasONS_JUNTOS.rar",
@@ -75,13 +79,10 @@ bhs_rar
 We need to extract the `rar` file to import the shapefile. We can do this with `lhmetools::unrar()`.
 
 ```{r unrar}
-if (requireNamespace("lhmetools", quietly = TRUE)) {
-  library(lhmetools)
-  wherextract <- tempdir() 
-  # alternatively you can save in the same path as the compacted file
-  #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
-  (shps <- unrar(bhs_rar, dest_dir = wherextract))
-}
+wherextract <- tempdir() 
+# alternatively you can save in the same path as the compacted file
+#wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
+(shps <- unrar(bhs_rar, dest_dir = wherextract))
 ```
 
 Now we select the shapefile of interest and then import it.
@@ -91,7 +92,7 @@ Now we select the shapefile of interest and then import it.
 ```
 
 
-```{r}
+```{r import-shape}
 bhs_pols <- import_bhs_ons(bhs_shp, quiet = TRUE)
 st_crs(bhs_pols) <- 4674
 bhs_pols
@@ -99,7 +100,7 @@ bhs_pols
 
 We can view the major watersheds (`r nrow(bhs_pols)`) with:
 
-```{r, fig.align='center', fig.asp = 1}
+```{r plot-shape, fig.align='center', fig.asp = 1}
 sa <- world[world$continent == "South America", ]
 br <- world[world$name_long == "Brazil", ]
 
@@ -128,9 +129,8 @@ for (i in ord_areas) {
 
 
 
-```{r, include = FALSE}
+```{r select-parana, include = FALSE}
 #Majors HPPs from Paraná River can be selected with:
-library(tidyverse)
 #sort(bhs_pols$nome)
 bhs_pr <- filter(bhs_pols, nome %in% 
          c("ITAIPU", "P_PRIMAVERA", "JUPIA", "A_VERMELHA", "BARRA_BONITA", "FURNAS")
@@ -139,7 +139,7 @@ bhs_pr
 ```
 
 
-```{r, fig.align='center', fig.asp = 1, include = FALSE}
+```{r plot-parana, fig.align='center', fig.asp = 1, include = FALSE}
 set.seed(6)
 oa_pr <- order(bhs_pr$adkm2, decreasing = TRUE)
 cols <- sample(colors(), size = nrow(bhs_pr))
@@ -165,20 +165,20 @@ for (i in oa_pr) {
 
 To extract a watershed polygon we first need the \"station id\" (posto). We can get this information with the function `info_station()`, for example for the HPP station of **G.B. MUNHOZ** we can use the following code:
 
-```{r}
+```{r metadata}
 info_posto <- info_station(name_regex = "MUNHOZ")
 info_posto
 ```
 We now use the \"station id\" (posto) to select the polygon of interest.
 
-```{r}
+```{r extract-pol}
 (poly_posto <- extract_poly(station = info_posto$posto))
 (area_poly_posto <- poly_posto[["adkm2"]])
 ```
 
 
 
-```{r, eval = FALSE, echo=FALSE}
+```{r plot-shape-leaflet, eval = FALSE, echo=FALSE}
 library(leaflet)
 library(leaflet.extras)
 library(htmltools)
@@ -217,7 +217,7 @@ p
 
 
 
-```{r, fig.align='center', fig.asp = 1, eval = FALSE, echo = FALSE}
+```{r plot-2, fig.align='center', fig.asp = 1, eval = FALSE, echo = FALSE}
 ord_areas_cresc <- order(bhs_pols$adkm2)
 
 for(i in ord_areas_cresc){
@@ -247,7 +247,9 @@ plot(st_geometry(bhs_pols)[i],
 
 ## Conditioned elevation model for a watershed polygon
 
-```{r}
+The hydrologically conditioned elevation for the station can be obtained with:
+
+```{r condem}
 r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
 condem_posto <- extract_condem(
   condem = r,
@@ -256,4 +258,16 @@ condem_posto <- extract_condem(
 )
 plot(condem_posto)
 ```
+
+## Elevation bands of a watershed polygon
+
+**`{HEgis}`** also provides a function to get the fractions of precipitation and catchment area by elevation bands.
+
+```{r elev-bands}
+elev_bands(con_dem = condem_posto, 
+           meteo_raster = precclim74, 
+           dz = 100
+           )
+```
+
 
