@@ -29,7 +29,9 @@ Imports:
     janitor,
     lubridate,
     raster,
-    tibble
+    tibble,
+    graphics,
+    utils
 Suggests: 
     spelling,
     testthat,
