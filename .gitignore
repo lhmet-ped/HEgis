@@ -4,6 +4,7 @@
 *.html
 .Ruserdata
 inst/doc
+inst/extdata/BaciasHidrograficasONS_JUNTOS
 README.Rmd
 NEWS.Rmd
 .csv
