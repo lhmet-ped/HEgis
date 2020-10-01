@@ -12,7 +12,17 @@ utils::globalVariables(
     "info_posto",
     "codONS",
     "info",
-    "nome"
+    "nome",
+    "area_frac",
+    "band",
+    "count",
+    "head",
+    "hist",
+    "inf",
+    "mean_elev",
+    "prec_frac",
+    "sup",
+    "zone"
     )
   )
 
