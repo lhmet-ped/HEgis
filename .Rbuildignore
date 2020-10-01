@@ -6,5 +6,6 @@
 ^cran-comments\.md$
 ^\.github$
 ^data-raw$
+^refs$
 ^\.travis\.yml$
 ^codecov\.yml$
