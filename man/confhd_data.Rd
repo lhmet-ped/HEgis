@@ -26,5 +26,8 @@ Data are available in \url{https://www.ccee.org.br/ccee/documentos}
 since July/2012.
 }
 \examples{
+if(FALSE){
 uhes_info <- confhd_data(format.Date(Sys.Date(), "\%Y\%m"))
+}
+
 }
