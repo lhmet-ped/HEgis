@@ -22,7 +22,8 @@ utils::globalVariables(
     "mean_elev",
     "prec_frac",
     "sup",
-    "zone"
+    "zone",
+    "."
     )
   )
 
