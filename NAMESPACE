@@ -2,7 +2,6 @@
 
 export("%>%")
 export(confhd_data)
-export(elev_bands)
 export(extract_condem)
 export(extract_poly)
 export(import_bhs_ons)
