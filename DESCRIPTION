@@ -31,7 +31,8 @@ Imports:
     raster,
     tibble,
     graphics,
-    utils
+    utils,
+    units
 Suggests: 
     spelling,
     testthat,
