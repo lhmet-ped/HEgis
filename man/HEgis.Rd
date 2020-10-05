@@ -23,9 +23,6 @@ the data set with all watersheds.
 
 \code{\link{extract_condem}}: to crop and mask a geographic subset of
 the hydrologically conditioned elevation model from Hydrosheds.
-
-\code{\link{elev_bands}}: to get fractions of precipitation and
-catchment area by elevation bands.
 }
 }
 
