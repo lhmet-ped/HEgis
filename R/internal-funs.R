@@ -23,7 +23,8 @@ utils::globalVariables(
     "prec_frac",
     "sup",
     "zone",
-    "."
+    ".",
+    "degree"
     )
   )
 
