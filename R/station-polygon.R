@@ -151,9 +151,9 @@ prep_poly_posto <- function(poly_station,
   if(dis.buf == 0) return(poly_posto_ll)
   # st_crs(poly_posto)
   # buffer of res(b_prec)[1]
-  poly_posto_b <- suppressWarnings(
-    sf::st_buffer(poly_posto_ll, dist = dis.buf)
-    )
+  poly_posto_b <- sf::st_buffer(poly_posto_ll,
+                                dist = units::set_units(dis.buf, degree)
+                                )
   poly_posto_b
 }
 
