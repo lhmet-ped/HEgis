@@ -1,5 +1,3 @@
-# HEgis 0.0.5
-
 News
 ================
 
@@ -7,12 +5,8 @@ News
 
 # inmetr 0.0.4.9999
 
-  - [ ] build function to generate elevation bands from CON raster. The
-    function will have two options to define the classes, based on the
-    number of classes or on the elevation interval (e.g `dx = 100 m`).
-
-  - [ ] add function to build netcdf file ‘elevation\_bands.nc’ for
-    input of FUSE
+  - [ ] add function to buffer a polygon based on a fraction of the
+    diagonal of extent (to be used in use in `prep_poly_station`).
 
 # HEgis 0.0.4
 
