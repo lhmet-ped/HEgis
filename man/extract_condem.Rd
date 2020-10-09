@@ -4,11 +4,7 @@
 \alias{extract_condem}
 \title{Extract a subset of a Raster object.}
 \usage{
-extract_condem(
-  condem = raster::raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
-  poly_station,
-  dis.buf = 0
-)
+extract_condem(condem = rawdem_br, poly_station, dis.buf = 0)
 }
 \arguments{
 \item{condem}{character, path file of hydrologically conditioned elevation
@@ -42,11 +38,15 @@ huge size (12.5 GB).
 if(FALSE){
   info_posto <- info_station(name_regex = "MUNHOZ")
   poly_posto <- extract_poly(station = info_posto$posto)
+  rawdem_br <- raster(
+    system.file("extdata", "BRA_msk_alt.grd", package = "HEgis")
+  )
   con_posto <- extract_condem(
-   raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
+   rawdem_br,
    poly_posto,
    dis.buf = 0
   )
+  con_posto
 }
 }
 }

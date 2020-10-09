@@ -21,11 +21,15 @@
 #' if(FALSE){
 #'   info_posto <- info_station(name_regex = "MUNHOZ")
 #'   poly_posto <- extract_poly(station = info_posto$posto)
+#'   rawdem_br <- raster(
+#'     system.file("extdata", "BRA_msk_alt.grd", package = "HEgis")
+#'   )
 #'   con_posto <- extract_condem(
-#'    raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
+#'    rawdem_br,
 #'    poly_posto,
 #'    dis.buf = 0
 #'   )
+#'   con_posto
 #' }
 #' }
 #' @seealso
@@ -35,7 +39,7 @@
 #' @importFrom raster mask crop
 #' @family elevation bands functions
 extract_condem <- function(
-  condem = raster::raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd"),
+  condem = rawdem_br,
   poly_station,
   dis.buf = 0
 ){
