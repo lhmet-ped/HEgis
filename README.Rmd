@@ -30,12 +30,7 @@ hydroelectric power dams.
 
 - `extract_poly()`: to extract a specific watershed polygon from the data set.
 
-- `extract_condem()`: to crop and mask a geographic subset of the hydrologically 
-conditioned elevation model from Hydrosheds.
-
-- `elev_bands()`: to get the fractions of precipitation and catchment area by elevation bands  
-
-
+- `extract_condem()`: to crop and mask a geographic subset of a raster. In this specific case the raster is a hydrologically conditioned elevation model.
 
 
 ## Installation
@@ -245,29 +240,36 @@ plot(st_geometry(bhs_pols)[i],
 }
 ```
 
-## Conditioned elevation model for a watershed polygon
+## Digital elevation model for a watershed polygon
 
-The hydrologically conditioned elevation for the station can be obtained with:
+The digital elevation model for the station can be obtained with:
+
+
+```{r import-rawdem, echo = FALSE, eval = TRUE, warning=FALSE, message=FALSE}
+if(Sys.info()[["user"]] == "hidrometeorologista"){
+# locally downloaded DEM data 
+rawdem_br <- suppressWarnings(raster("inst/extdata/BRA_msk_alt.grd"))
+} else {
+# download DEM data with raster package
+tempdir <- tmpDir()
+rawdem_br <- getData("alt", country = "BRA", path = tempdir())
+}
+```
+
+```{r cmd-import-rawdem, echo = TRUE, eval = FALSE}
+rawdem_br <- getData("alt", country = "BRA")
+```
 
 ```{r condem}
-r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
 condem_posto <- extract_condem(
-  condem = r,
+  condem = rawdem_br,
   poly_station = poly_posto,
-  dis.buf = 0
+  dis.buf = 0.25 # buffer em degrees
 )
 plot(condem_posto)
+plot(st_geometry(poly_posto), add = TRUE)
 ```
 
-## Elevation bands of a watershed polygon
-
-**`{HEgis}`** also provides a function to get the fractions of precipitation and catchment area by elevation bands.
-
-```{r elev-bands}
-elev_bands(con_dem = condem_posto, 
-           meteo_raster = precclim74, 
-           dz = 100
-           )
-```
+The `extract_condem()` function is designed to be used with a hydrologically consistent 'dem', which required for hydrological modeling purposes. But in the example above, a raw DEM was used for the purpose of demonstrating the use of the function. 
 
 

@@ -22,11 +22,9 @@ project. The main functions of are:
   - `extract_poly()`: to extract a specific watershed polygon from the
     data set.
 
-  - `extract_condem()`: to crop and mask a geographic subset of the
-    hydrologically conditioned elevation model from Hydrosheds.
-
-  - `elev_bands()`: to get the fractions of precipitation and catchment
-    area by elevation bands
+  - `extract_condem()`: to crop and mask a geographic subset of a
+    raster. In this specific case the raster is a hydrologically
+    conditioned elevation model.
 
 ## Installation
 
@@ -54,12 +52,12 @@ library(raster)
 #> Loading required package: sp
 library(lhmetools)
 library(tidyverse)
-#> ── Attaching packages ────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ── Attaching packages ─────────────────────────────────────────────────── tidyverse 1.3.0 ──
 #> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 #> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 #> ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 #> ✓ readr   1.3.1     ✓ forcats 0.5.0
-#> ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ────────────────────────────────────────────────────── tidyverse_conflicts() ──
 #> x tidyr::extract() masks raster::extract()
 #> x dplyr::filter()  masks stats::filter()
 #> x dplyr::lag()     masks stats::lag()
@@ -91,21 +89,21 @@ wherextract <- tempdir()
 # alternatively you can save in the same path as the compacted file
 #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
 (shps <- unrar(bhs_rar, dest_dir = wherextract))
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/RtmpFSymWS/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r
@@ -206,47 +204,33 @@ We now use the "station id" (posto) to select the polygon of interest.
 #> [1] 30207.57
 ```
 
-## Conditioned elevation model for a watershed polygon
+## Digital elevation model for a watershed polygon
 
-The hydrologically conditioned elevation for the station can be obtained
-with:
+The digital elevation model for the station can be obtained with:
 
 ``` r
-r <- raster("~/Dropbox/datasets/GIS/hydrosheds/sa_con_3s_hydrosheds.grd")
+rawdem_br <- getData("alt", country = "BRA")
+```
+
+``` r
 condem_posto <- extract_condem(
-  condem = r,
+  condem = rawdem_br,
   poly_station = poly_posto,
-  dis.buf = 0
+  dis.buf = 0.25 # buffer em degrees
 )
+#> Warning in st_buffer.sfc(st_geometry(x), dist, nQuadSegs, endCapStyle =
+#> endCapStyle, : st_buffer does not correctly buffer longitude/latitude data
+#> Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded
+#> datum Unknown based on WGS84 ellipsoid in CRS definition
+#> Warning in showSRID(SRS_string, format = "PROJ", multiline = "NO"): Discarded
+#> datum Unknown based on WGS84 ellipsoid in CRS definition
 plot(condem_posto)
+plot(st_geometry(poly_posto), add = TRUE)
 ```
 
 <img src="man/figures/README-condem-1.png" width="100%" />
 
-## Elevation bands of a watershed polygon
-
-**`{HEgis}`** also provides a function to get the fractions of
-precipitation and catchment area by elevation bands.
-
-``` r
-elev_bands(con_dem = condem_posto, 
-           meteo_raster = precclim74, 
-           dz = 100
-           )
-#>   |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
-#> 
-#>   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%
-#> # A tibble: 10 x 7
-#>     band   inf   sup mean_elev   count   area_frac   prec_frac
-#>    <dbl> <dbl> <dbl>     <dbl>   <int>       <dbl>       <dbl>
-#>  1     1   588   688       638    1084 0.000276    0.000339   
-#>  2     2   688   788       738  521320 0.133       0.133      
-#>  3     3   788   888       838 1545776 0.394       0.385      
-#>  4     4   888   988       938 1014758 0.259       0.255      
-#>  5     5   988  1088      1038  406154 0.104       0.109      
-#>  6     6  1088  1188      1138  309625 0.0789      0.0841     
-#>  7     7  1188  1288      1238  111320 0.0284      0.0301     
-#>  8     8  1288  1388      1338   12934 0.00330     0.00362    
-#>  9     9  1388  1488      1438     409 0.000104    0.000129   
-#> 10    10  1488  1588      1538       3 0.000000765 0.000000994
-```
+The `extract_condem()` function is designed to be used with a
+hydrologically consistent ‘dem’, which required for hydrological
+modeling purposes. But in the example above, a raw DEM was used for the
+purpose of demonstrating the use of the function.
