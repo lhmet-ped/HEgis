@@ -24,7 +24,8 @@ utils::globalVariables(
     "sup",
     "zone",
     ".",
-    "degree"
+    "degree",
+    "rawdem_br"
     )
   )
 
