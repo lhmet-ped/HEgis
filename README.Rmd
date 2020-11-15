@@ -35,11 +35,11 @@ hydroelectric power dams.
 
 ## Installation
 
-You can install **`{HEgis}`** from [github](https://github.com/lhmet/HEgis) with:
+You can install **`{HEgis}`** from [github](https://github.com/lhmet-ped/HEgis) with:
 
 ``` r
 library(devtools)
-install_github("lhmet/HEgis")
+install_github("lhmet-ped/HEgis")
 ```
 
 <!-- BEFORE RUN (RE)INSTALL THE PACKAGE -->
