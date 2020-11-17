@@ -29,11 +29,11 @@ project. The main functions of are:
 ## Installation
 
 You can install **`{HEgis}`** from
-[github](https://github.com/lhmet/HEgis) with:
+[github](https://github.com/lhmet-ped/HEgis) with:
 
 ``` r
 library(devtools)
-install_github("lhmet/HEgis")
+install_github("lhmet-ped/HEgis")
 ```
 
 <!-- BEFORE RUN (RE)INSTALL THE PACKAGE -->
@@ -52,12 +52,12 @@ library(raster)
 #> Loading required package: sp
 library(lhmetools)
 library(tidyverse)
-#> ── Attaching packages ─────────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
 #> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-#> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
+#> ✓ tibble  3.0.4     ✓ dplyr   1.0.2
 #> ✓ tidyr   1.1.2     ✓ stringr 1.4.0
-#> ✓ readr   1.3.1     ✓ forcats 0.5.0
-#> ── Conflicts ────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✓ readr   1.4.0     ✓ forcats 0.5.0
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> x tidyr::extract() masks raster::extract()
 #> x dplyr::filter()  masks stats::filter()
 #> x dplyr::lag()     masks stats::lag()
@@ -89,21 +89,21 @@ wherextract <- tempdir()
 # alternatively you can save in the same path as the compacted file
 #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
 (shps <- unrar(bhs_rar, dest_dir = wherextract))
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/RtmpFzVfM9/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r
@@ -183,7 +183,7 @@ info_posto
 #> # A tibble: 1 x 10
 #>     num nome        posto   jus   ree v_inic u_exis modif inic_hist fim_hist
 #>   <int> <chr>       <int> <int> <int>  <dbl> <chr>  <int>     <int>    <int>
-#> 1    74 G.B. MUNHOZ    74    76    11   29.2 EX         0      1931     2018
+#> 1    74 G.B. MUNHOZ    74    76    11    3.5 EX         0      1931     2018
 ```
 
 We now use the "station id" (posto) to select the polygon of interest.
