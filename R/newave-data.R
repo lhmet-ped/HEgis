@@ -113,14 +113,18 @@ path_confhd_file <- function(path) {
 #'@return Default is the path to `CONFHD.DAT` file, otherwise the
 #'temporary directory of extracted data.
 nw_down <- function(link, confhd_path = TRUE, quiet = TRUE){
-  #link = "https://www.ccee.org.br/ccee/documentos/NW201809"
-  # link = "https://www.ccee.org.br/ccee/documentos/NW201206"
+  #link = "https://www.ccee.org.br/ccee/documentos/NW201809" # 500 MB!?
+  # link = "https://www.ccee.org.br/ccee/documentos/NW201208"
   checkmate::assert_character(link)
   checkmate::assert_true(curl::has_internet())
   #checkmate::assert_true(RCurl::url.exists(link))
-  checkmate::assert_true(url_exists(link, quiet = quiet))
+
+  ## taking to much time
+  #checkmate::assert_true(url_exists(link, quiet = quiet))
+
   zip_dest <- fs::file_temp(ext = "zip")
-  utils::download.file(link, destfile = zip_dest)
+
+  utils::download.file(link, destfile = zip_dest, mode = "wb")
   #unzip(zip_dest, list = TRUE)
   dir_ext <- fs::path_ext_remove(zip_dest)
   unzip(zip_dest, exdir = dir_ext)
