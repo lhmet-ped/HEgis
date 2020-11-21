@@ -89,8 +89,9 @@ extract_poly <- function(
 
   # if folder already exists just read shape
   path2extractedfiles <- fs::path_ext_remove(bhs_rar)
-  if(dir.exists(path2extractedfiles)){
-    path_shp <- fs::dir_ls(path2extractedfiles, regexp = "UHEsONS\\.shp$")
+  path_shp <- fs::dir_ls(path2extractedfiles, regexp = "UHEsONS\\.shp$")
+
+  if(file.exists(path_shp)){
     bhs_pols <- HEgis::import_bhs_ons(path_shp, quiet = TRUE)
   } else {
     # lhmetools to unrar
