@@ -72,6 +72,8 @@ extract_poly <- function(
   prefix = "poligono-posto-",
   dest_dir = "output") {
 
+  # station = 74; save = FALSE; prefix = "poligono-posto-"; dest_dir = "output"
+
   #checkmate::assert_true(exists("info"))
   # Obter poligonos das UHEs
   # HEgis should be installed to have acces to gis data
@@ -89,14 +91,14 @@ extract_poly <- function(
 
   # if folder already exists just read shape
   path2extractedfiles <- fs::path_ext_remove(bhs_rar)
-  path_shp <- fs::dir_ls(path2extractedfiles, regexp = "UHEsONS\\.shp$")
 
-  if(file.exists(path_shp)){
+  if(dir.exists(path2extractedfiles)){
+    path_shp <- fs::dir_ls(path2extractedfiles, regexp = "UHEsONS\\.shp$")
     bhs_pols <- HEgis::import_bhs_ons(path_shp, quiet = TRUE)
   } else {
     # lhmetools to unrar
     shps <- lhmetools::unrar(bhs_rar, overwrite = TRUE)
-    bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))]
+    bhs_shp <- shps[grep("Bacias.*UHEsONS\\.shp$", fs::path_file(shps))]
     bhs_pols <- HEgis::import_bhs_ons(bhs_shp, quiet = TRUE)
   }
   #checkmate::assert_subset('74', bhs_pols[["codONS"]])
@@ -106,7 +108,9 @@ extract_poly <- function(
 
   #poly_posto <- dplyr::filter(bhs_pols, codONS == info$posto)
   poly_posto <- dplyr::filter(bhs_pols, codONS %in% station)
-  message("The data is not projected. We are taking CRS as SIRGAS 2000 (EPSG: 4674), the same as that of BHO-ANA on which the provider was based.")
+  message(
+    "The data is not projected. We are taking CRS as SIRGAS 2000 (EPSG: 4674),
+     the same as that of BHO-ANA on which the provider was based.")
   poly_posto <- sf::st_set_crs(poly_posto, 4674)
 
   if (save) {
