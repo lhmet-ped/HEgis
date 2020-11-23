@@ -13,6 +13,6 @@ test_that("Produces the correct output", {
 
 test_that("Produces the correct error", {
   # before 201207 there is no link to data
-  expect_error(confhd_data("201206"))
+  expect_warning(expect_error(confhd_data("201206")))
   expect_error(confhd_data("aayy"))
 })
