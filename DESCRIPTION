@@ -12,7 +12,8 @@ Description: The goal of HEgis is to prepare GIS data for use in
 License: MIT + file LICENSE
 Depends: 
     R (>= 4.0)
-SystemRequirements: unrar library version 5.61 or later
+SystemRequirements: C++11, GDAL (>= 2.0.1), GEOS (>= 3.4.0),
+    PROJ (>= 4.8.0) ,unrar (>= 5.61)
 Imports: 
     checkmate,
     dplyr,
