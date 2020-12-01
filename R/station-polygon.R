@@ -96,15 +96,8 @@ extract_poly <- function(
   # if folder already exists just read shape
   path2extractedfiles <- fs::path_ext_remove(bhs_rar)
 
-  if(dir.exists(path2extractedfiles)){
-    path_shp <- fs::dir_ls(path2extractedfiles, regexp = "UHEsONS\\.shp$")
-    bhs_pols <- HEgis::import_bhs_ons(path_shp, quiet = TRUE)
-  } else {
-    # lhmetools to unrar
-    shps <- lhmetools::unrar(bhs_rar, overwrite = TRUE)
-    bhs_shp <- shps[grep("Bacias.*UHEsONS\\.shp$", fs::path_file(shps))]
-    bhs_pols <- HEgis::import_bhs_ons(bhs_shp, quiet = TRUE)
-  }
+  bhs_pols <- import_bhs_ons(quiet = TRUE)
+
   #checkmate::assert_subset('74', bhs_pols[["codONS"]])
   checkmate::assert_subset(station, bhs_pols[["codONS"]])
   # G.B. MUNHOZ é FOZ DO AREIA !!!
@@ -122,7 +115,7 @@ extract_poly <- function(
       data_posto = poly_posto,
       .prefix = prefix,
       .posto_id = info$posto[1],
-      .dest_dir = dest_dir
+      .dest_dir = dest_dirs
     )
   }
 

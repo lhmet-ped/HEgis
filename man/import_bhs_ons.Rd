@@ -2,18 +2,16 @@
 % Please edit documentation in R/HE-io.R
 \name{import_bhs_ons}
 \alias{import_bhs_ons}
-\title{Import shape files with watersheds polygons from ONS Hydro Power plants}
+\title{Import shape file with watersheds polygons from ONS Hydro Power plants}
 \source{
 The data were kindly provided by Saulo Aires
 (Water Resources Specialist from ANA) through Prof.
 Carlos Lima (UnB, e-mail in 2020-03-17).
 }
 \usage{
-import_bhs_ons(shape_file, quiet = FALSE)
+import_bhs_ons(quiet = FALSE)
 }
 \arguments{
-\item{shape_file}{A character scalar. Path to shape file.}
-
 \item{quiet}{Logical. Hide printed output data structure or display them as
 they occur? Default FALSE.}
 }
@@ -25,25 +23,16 @@ layer names, each with their geometry type(s). Note that the number of
 layers may also be zero.
 }
 \description{
-Import shape files with watersheds polygons from ONS Hydro Power plants
+Import shape file with watersheds polygons from ONS Hydro Power plants
 }
 \details{
-This function was made to import a specific
-file (e.g. \code{BaciasHidrograficasONS_JUNTOS.shp}). It will be extended to
-the files in \code{BaciasHidrograficasONS_SEPARADO.rar}.
+This function look at the extdata folder of HEgis to extract the
+file \code{BaciasHidrograficasONS_JUNTOS.rar} and import the shapefile of same
+name in it.
 }
 \examples{
 if (FALSE) {
-  bhs_rar <- system.file(
-    "extdata",
-    "BaciasHidrograficasONS_JUNTOS.rar",
-    package = "HEgis"
-  )
-  if (requireNamespace("lhmetools", quietly = TRUE)) {
-    (shps <- unrar(bhs_rar))
-    bhs_shp <- shps[grep("Bacias.*\\\\.shp$", fs::path_file(shps))]
-    bhs_pols <- import_bhs_ons(bhs_shp)
-  }
+    bhs_pols <- import_bhs_ons()
 }
 }
 \author{
