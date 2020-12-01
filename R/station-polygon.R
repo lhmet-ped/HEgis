@@ -115,7 +115,7 @@ extract_poly <- function(
       data_posto = poly_posto,
       .prefix = prefix,
       .posto_id = info$posto[1],
-      .dest_dir = dest_dirs
+      .dest_dir = dest_dir
     )
   }
 

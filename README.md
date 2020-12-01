@@ -10,8 +10,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 <!-- [![Codecov test coverage](https://codecov.io/gh/lhmet-ped/HEgis/branch/master/graph/badge.svg)](https://codecov.io/gh/lhmet-ped/HEgis?branch=master) -->
 <!-- badges: end -->
 
-The goal of HEgis is to prepare GIS data for use in HydroEngie R\&D
-project. The main functions of are:
+The goal of HEgis is to prepare GIS data for use in
+[fuse.prep](https://github.com/lhmet-ped/fuse.prep). The main functions
+of are:
 
   - `import_bhs_ons()`: use it to import the shapefile with basins of
     major hydroelectric power dams.
@@ -70,48 +71,41 @@ library(tidyverse)
 
 A shapefile with the watersheds of major Hydroelectric Power plants from
 ONS is available with **`{HEgis}`** package automatically after you
-install it. The path to the compacted file is obtained with the code
-below:
+install it. Import this data simply using:
 
 ``` r
-bhs_rar <- system.file(
-  "extdata",
-  "BaciasHidrograficasONS_JUNTOS.rar",
-  package = "HEgis"
-)
-bhs_rar
-#> [1] "/home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS.rar"
-```
-
-We need to extract the `rar` file to import the shapefile. We can do
-this with `lhmetools::unrar()`.
-
-``` r
-wherextract <- tempdir() 
-# alternatively you can save in the same path as the compacted file
-#wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
-(shps <- unrar(bhs_rar, dest_dir = wherextract))
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
-```
-
-Now we select the shapefile of interest and then import it.
-
-``` r
-(bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-```
-
-``` r
-bhs_pols <- import_bhs_ons(bhs_shp, quiet = TRUE)
-st_crs(bhs_pols) <- 4674
-bhs_pols
+(bhs_pols <- import_bhs_ons())
+#> Using previously extracted data.
+#> reading file from: 
+#>  /home/hidrometeorologista/.R/libs/HEgis/extdata/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> Simple feature collection with 87 features and 9 fields
+#> geometry type:  POLYGON
+#> dimension:      XY
+#> bbox:           xmin: -72.41788 ymin: -29.41284 xmax: -38.93867 ymax: -2.495375
+#> geographic CRS: SIRGAS 2000
+#> First 10 features:
+#>    codONS codANA         nome          nomeOri      adkm2   volhm3          rio
+#> 1     266  11735       ITAIPU       UHE Itaipu 822904.333 29403.91   Rio Paraná
+#> 2     291  62833   DARDANELOS             <NA>  15332.607       NA Rio Aripuanã
+#> 3     211   3581 FUNIL-GRANDE        UHE Funil  15720.006   268.93   Rio Grande
+#> 4     134   3875 SALTO GRANDE UHE Salto Grande   2476.716    78.00 Rio Guanhães
+#> 5     245   8124        JUPIA        UHE Jupiá 476527.733  3354.00   Rio Paraná
+#> 6     197   3626       PICADA       UHE Picada   1725.833     7.09 Rio do Peixe
+#> 7     295  14588        JAURU        UHE Jauru   2245.733    17.15         <NA>
+#> 8     296  14589      GUAPORE      UHE Guaporé   1344.294    21.00  Rio Guaporé
+#> 9     240   8013    PROMISSAO    UHE Promissão  57841.510  7408.00    Rio Tietê
+#> 10    216   7607 CAMPOS NOVOS UHE Campos Novos  14445.832  1477.00   Rio Canoas
+#>     cobacia        tpopera                       geometry
+#> 1   8631311     Fio d'água POLYGON ((-43.60082 -21.168...
+#> 2  46293331           <NA> POLYGON ((-59.35952 -11.975...
+#> 3  86895773     Fio d'água POLYGON ((-44.50861 -22.224...
+#> 4   7766211     Fio d'água POLYGON ((-43.04034 -18.603...
+#> 5    865775     Fio d'água POLYGON ((-46.35946 -23.273...
+#> 6   7788753     Fio d'água POLYGON ((-43.89604 -21.974...
+#> 7  89969715     Fio d'água POLYGON ((-58.76821 -14.676...
+#> 8   4699693     Fio d'água POLYGON ((-58.90869 -14.595...
+#> 9   8661373 Regulariza_ONS POLYGON ((-46.10237 -22.999...
+#> 10   829173 Regulariza_ONS POLYGON ((-49.44034 -28.132...
 #> Simple feature collection with 87 features and 9 fields
 #> geometry type:  POLYGON
 #> dimension:      XY
