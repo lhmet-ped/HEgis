@@ -64,7 +64,7 @@ import_bhs_ons <- function(shape_file, quiet = FALSE) {
       readr::parse_guess
     )
   ) %>% # glimpse()
-    dplyr::mutate(HEgis::confhd_data(format.Date(Sys.Date()-40, "%Y%m"))
+    dplyr::mutate(
       dplyr::across(
         tidyselect::vars_select_helpers$where(is.numeric),
         .fix_nas_num
