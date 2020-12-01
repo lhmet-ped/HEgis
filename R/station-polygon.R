@@ -16,7 +16,7 @@ info_station <- function(
   YYYYMM = format.Date(Sys.Date()-40, "%Y%m")
 ){
 
-  info_uhes <- HEgis::confhd_data(format.Date(Sys.Date()-40, "%Y%m"))
+  info_uhes <- HEgis::confhd_data(YYYYMM)
 
   # UHE Governador Bento Munhoz da Rocha Neto
   nome_posto <- dplyr::filter(
