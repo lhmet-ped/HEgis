@@ -1,14 +1,23 @@
-# HEgis 0.0.6
-
 News
 ================
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-# inmetr 0.0.4.9999
+# HEgis 0.0.6.999
 
   - [ ] add function to buffer a polygon based on a fraction of the
     diagonal of extent (to be used in use in `prep_poly_station`).
+
+# HEgis 0.0.6
+
+  - [x] fix examples and default values of `conf_hdata(YYYMM =
+    format.Date(Sys.Date(), "%Y%m"))` to avoid error when data are not
+    available yet (issue \#2).
+
+# HEgis 0.0.5
+
+  - [x] move elev\_bands() to \*\*`{fuse.prep}` and add a reproducible
+    example in `extract_condem()`
 
 # HEgis 0.0.4
 
