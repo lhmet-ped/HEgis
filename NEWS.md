@@ -4,6 +4,7 @@ News
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
 
+# HEgis (development version)
 
   - [ ] add function to buffer a polygon based on a fraction of the
     diagonal of extent (to be used in use in `prep_poly_station`).

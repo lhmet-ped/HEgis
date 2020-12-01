@@ -1,7 +1,6 @@
 Package: HEgis
-Title: Functions To Import GIS Data Needed For The HYDROENGIE
-    R&D Project
-Version: 0.1.0
+Title: Functions To Import GIS Data Needed For FUSE
+Version: 0.1.0.9000
 Authors@R: 
     person(given = "Jônatan",
            family = "Tatsch",
