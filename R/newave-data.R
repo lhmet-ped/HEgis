@@ -204,7 +204,8 @@ read_confhd <- function(confhd_file) {
 #'
 #' @examples
 #' if(FALSE){
-#' uhes_info <- confhd_data(format.Date(Sys.Date(), "%Y%m"))
+#' # Get the table for the previous month to ensure that the data already exists
+#' uhes_info <- confhd_data(format.Date(Sys.Date()-40, "%Y%m"))
 #' }
 #'
 confhd_data <- function(YYYYMM, confhd_path = TRUE){
