@@ -3,8 +3,15 @@
 \name{confhd_data}
 \alias{confhd_data}
 \title{Get data from \code{CONFHD.DAT} file for the a given year and month}
+\source{
+Data are available in \url{https://www.ccee.org.br/ccee/documentos}
+since July/2012.
+}
 \usage{
-confhd_data(YYYYMM, confhd_path = TRUE)
+confhd_data(
+  YYYYMM = format.Date(Sys.Date() - 40, "\%Y\%m"),
+  confhd_path = TRUE
+)
 }
 \arguments{
 \item{YYYYMM}{character vector with year (YYYY) and month (MM). Accepted
@@ -21,13 +28,15 @@ a \link[tibble:tibble-package]{tibble} with tidy data.
 \description{
 Get data from \code{CONFHD.DAT} file for the a given year and month
 }
-\details{
-Data are available in \url{https://www.ccee.org.br/ccee/documentos}
-since July/2012.
+\note{
+A data request for the current month may not yet be available for UHEs
+configuration data. That is why it is recommended to use the date in the
+previous 40 days to ensure that the data will be available.
 }
 \examples{
 if(FALSE){
-uhes_info <- confhd_data(format.Date(Sys.Date(), "\%Y\%m"))
+# Get the table for the previous month to ensure that the data already exists
+uhes_info <- confhd_data(format.Date(Sys.Date()-40, "\%Y\%m"))
 }
 
 }

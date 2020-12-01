@@ -69,6 +69,7 @@ url_exists <- function(x, non_2xx_return_value = FALSE, quiet = FALSE,...) {
 #'
 #' @return A character string naming the URL of the zip file to be downloaded.
 #' @keywords internal
+#' @seealso \code{\link[HEgis]{confhd_data}}
 # examples
 # yyyymm = c("201809", "2018", "2018.02", "2018-03", "2018-04-01", "2018/05")
 # nw_urls(yyyymm)
@@ -197,18 +198,22 @@ read_confhd <- function(confhd_file) {
 #'
 #' @inheritParams nw_urls
 #' @inheritParams nw_down
-#' @details Data are available in \url{https://www.ccee.org.br/ccee/documentos}
+#' @source Data are available in \url{https://www.ccee.org.br/ccee/documentos}
 #' since July/2012.
 #' @return a [tibble][tibble::tibble-package] with tidy data.
 #' @export
-#'
+#' @note A data request for the current month may not yet be available for UHEs
+#' configuration data. That is why it is recommended to use the date in the
+#' previous 40 days to ensure that the data will be available.
 #' @examples
 #' if(FALSE){
 #' # Get the table for the previous month to ensure that the data already exists
 #' uhes_info <- confhd_data(format.Date(Sys.Date()-40, "%Y%m"))
 #' }
 #'
-confhd_data <- function(YYYYMM, confhd_path = TRUE){
+confhd_data <- function(
+                        YYYYMM = format.Date(Sys.Date() - 40, "%Y%m"),
+                        confhd_path = TRUE) {
   read_confhd(nw_down(nw_urls(YYYYMM), confhd_path))
 }
 

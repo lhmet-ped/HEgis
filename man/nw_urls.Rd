@@ -17,4 +17,7 @@ A character string naming the URL of the zip file to be downloaded.
 \description{
 Build the link to the monthly file of NEWAVE model CCEE deck of prices.
 }
+\seealso{
+\code{\link[HEgis]{confhd_data}}
+}
 \keyword{internal}

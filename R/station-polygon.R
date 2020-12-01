@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 #' Get basic info of ONS station
-#'
+#' @inheritParams confhd_data
 #' @param name_regex a string or regex to search for the name of the ONS station
 #'
 #' @return  a \code{\link[tibble]{tibble}}
@@ -10,9 +10,13 @@
 #'  info_station("MUNHOZ")
 #' }
 #' @family station metadata functions
-info_station <- function(name_regex = "MUNHOZ"){
+#' @seealso \code{\link[HEgis]{confhd_data}}
+info_station <- function(
+  name_regex = "MUNHOZ",
+  YYYYMM = format.Date(Sys.Date()-40, "%Y%m")
+){
 
-  info_uhes <- HEgis::confhd_data(format.Date(Sys.Date(), "%Y%m"))
+  info_uhes <- HEgis::confhd_data(format.Date(Sys.Date()-40, "%Y%m"))
 
   # UHE Governador Bento Munhoz da Rocha Neto
   nome_posto <- dplyr::filter(
