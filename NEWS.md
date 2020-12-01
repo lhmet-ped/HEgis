@@ -3,10 +3,14 @@ News
 
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
 
-# HEgis 0.0.6.999
+
 
   - [ ] add function to buffer a polygon based on a fraction of the
     diagonal of extent (to be used in use in `prep_poly_station`).
+
+# HEgis 0.1.0
+
+  - [x] adapt `import_bhs_ons()` to internally extract the rar file, select the shapefile and import it (enhancement #3).
 
 # HEgis 0.0.6
 
