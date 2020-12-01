@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 context("confhd_data()")
 
 test_that("Produces the correct output", {
@@ -17,7 +16,7 @@ test_that("Produces the correct error", {
   expect_warning(expect_error(confhd_data("201206")))
   expect_error(confhd_data("aayy"))
 })
-=======
+
 context("confhd_data()")
 
 test_that("Produces the correct output", {
@@ -36,4 +35,4 @@ test_that("Produces the correct error", {
   expect_warning(expect_error(confhd_data("201206")))
   expect_error(confhd_data("aayy"))
 })
->>>>>>> f705d65fad4368582ee36cb23ec919f1892992cb
+
