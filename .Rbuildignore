@@ -9,3 +9,8 @@
 ^refs$
 ^\.travis\.yml$
 ^codecov\.yml$
+^\.Rhistory$
+^inst/extdata/BRA_msk_alt\.grd$
+^inst/extdata/BRA_msk_alt\.gri$
+^inst/extdata/BRA_msk_alt\.vrt$
+^inst/extdata/BaciasHidrograficasONS_JUNTOS$
