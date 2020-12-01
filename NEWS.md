@@ -1,4 +1,4 @@
-# HEgis (development version)
+# HEgis 0.0.6
 
 News
 ================

@@ -35,6 +35,8 @@ hydroelectric power dams.
 
 ## Installation
 
+<!-- https://stackoverflow.com/questions/44382368/rgdal-installation-difficulty-on-ubuntu-16-04-lts -->
+
 You can install **`{HEgis}`** from [github](https://github.com/lhmet-ped/HEgis) with:
 
 ``` r

@@ -28,6 +28,8 @@ project. The main functions of are:
 
 ## Installation
 
+<!-- https://stackoverflow.com/questions/44382368/rgdal-installation-difficulty-on-ubuntu-16-04-lts -->
+
 You can install **`{HEgis}`** from
 [github](https://github.com/lhmet-ped/HEgis) with:
 
@@ -89,21 +91,21 @@ wherextract <- tempdir()
 # alternatively you can save in the same path as the compacted file
 #wherextract <- file.path(.libPaths()[1], "HEgis", "extdata")
 (shps <- unrar(bhs_rar, dest_dir = wherextract))
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.cpg
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.dbf
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shx
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.cpg
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.dbf
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shp
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/LagoBarragemONS.shx
 ```
 
 Now we select the shapefile of interest and then import it.
 
 ``` r
 (bhs_shp <- shps[grep("Bacias.*\\.shp$", fs::path_file(shps))])
-#> /tmp/Rtmp0M2uME/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
+#> /tmp/RtmpKLiRFt/BaciasHidrograficasONS_JUNTOS/BaciasHidrograifcasUHEsONS.shp
 ```
 
 ``` r
@@ -183,14 +185,15 @@ info_posto
 #> # A tibble: 1 x 10
 #>     num nome        posto   jus   ree v_inic u_exis modif inic_hist fim_hist
 #>   <int> <chr>       <int> <int> <int>  <dbl> <chr>  <int>     <int>    <int>
-#> 1    74 G.B. MUNHOZ    74    76    11    3.5 EX         0      1931     2018
+#> 1    74 G.B. MUNHOZ    74    76    11   29.2 EX         0      1931     2018
 ```
 
 We now use the "station id" (posto) to select the polygon of interest.
 
 ``` r
 (poly_posto <- extract_poly(station = info_posto$posto))
-#> The data is not projected. We are taking CRS as SIRGAS 2000 (EPSG: 4674), the same as that of BHO-ANA on which the provider was based.
+#> The data is not projected. We are taking CRS as SIRGAS 2000 (EPSG: 4674),
+#>      the same as that of BHO-ANA on which the provider was based.
 #> Simple feature collection with 1 feature and 9 fields
 #> geometry type:  POLYGON
 #> dimension:      XY
