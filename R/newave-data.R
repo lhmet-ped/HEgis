@@ -93,11 +93,11 @@ nw_urls <- function(YYYYMM = "201809"){
   nw_zip_urls
 }
 
-#' Get the file path to CONFHD.DAT
-#' @keywords internal
+# Get the file path to CONFHD.DAT
+# @keywords internal
 path_confhd_file <- function(path) {
-  grep("CONFHD.DAT",
-       fs::dir_ls(path),
+  grep(pattern = "CONFHD.DAT",
+       x = fs::dir_ls(path),
        value = TRUE,
        ignore.case = TRUE
   )
