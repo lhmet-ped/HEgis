@@ -96,11 +96,29 @@ nw_urls <- function(YYYYMM = "201809"){
 # Get the file path to CONFHD.DAT
 # @keywords internal
 path_confhd_file <- function(path) {
-  grep(pattern = "CONFHD.DAT",
+  # path = dir_ext
+  path_confhd_file <- grep(pattern = "CONFHD.DAT",
        x = fs::dir_ls(path),
        value = TRUE,
        ignore.case = TRUE
   )
+  if(length(path_confhd_file) == 0){
+    message("CONFHD.DAT file not found.")
+    message("The folder expected to contain this file
+            has the folowing content:")
+    print(fs::dir_ls(path))
+
+    .find_deep <- function(path){
+      zips <- fs::dir_ls(path, glob = "*.zip")
+      last_zip <- sort(zips)[length(zips)]
+      dir_ext <- fs::path_ext_remove(last_zip)
+      unzip(zip_dest, exdir = dir_ext)
+      checkmate::assert_directory_exists(dir_ext)
+      path_confhd_file(dir_ext)
+    }
+
+  }
+  path_confhd_file
 }
 
 #' Download zip file from link provided by `nw_urls()`
@@ -115,7 +133,7 @@ path_confhd_file <- function(path) {
 #'temporary directory of extracted data.
 nw_down <- function(link, confhd_path = TRUE, quiet = TRUE){
   #link = "https://www.ccee.org.br/ccee/documentos/NW201809" # 500 MB!?
-  # link = "https://www.ccee.org.br/ccee/documentos/NW201208"
+  # link = "https://www.ccee.org.br/ccee/documentos/NW202012"
   checkmate::assert_character(link)
   checkmate::assert_true(curl::has_internet())
   #checkmate::assert_true(RCurl::url.exists(link))
